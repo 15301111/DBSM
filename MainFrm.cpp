@@ -1,20 +1,20 @@
 
-// MainFrm.cpp : implementation of the CMainFrame class
+// MainFrm.cpp : CMainFrame 类的实现
 //
 
 #include "stdafx.h"
 #include "DBMS.h"
-
+#include "LoginDlg.h"
 #include "MainFrm.h"
-#include "DBView.h"      
-#include "DBMSView.h"  
-#include "DBMSDoc.h"
+#include "BinaryFile.h"
+#include "DBView.h"
+#include "TableView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
-
+// CMainFrame
 
 IMPLEMENT_DYNCREATE(CMainFrame, CFrameWnd)
 
@@ -24,49 +24,47 @@ END_MESSAGE_MAP()
 
 static UINT indicators[] =
 {
-	ID_SEPARATOR,           
-	ID_RUANKO_TITLE,       
+	ID_SEPARATOR,           // 状态行指示器
 	ID_INDICATOR_CAPS,
 	ID_INDICATOR_NUM,
 	ID_INDICATOR_SCRL,
 };
 
-
+// CMainFrame 构造/析构
 
 CMainFrame::CMainFrame()
 {
+	// TODO: 在此添加成员初始化代码
 }
 
 CMainFrame::~CMainFrame()
 {
 }
 
-
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CFrameWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
-		!m_wndToolBar.LoadToolBar(IDR_MAINFRAME))
-	{
-		TRACE0("Failed to create toolbar\n");
-		return -1;      //创建失败
-	}
+	//if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
+	//	!m_wndToolBar.LoadToolBar(IDR_MAINFRAME))
+	//{
+	//	TRACE0("未能创建工具栏\n");
+	//	return -1;      // 未能创建
+	//}
 
 	if (!m_wndStatusBar.Create(this))
 	{
-		TRACE0("Failed to create status bar\n");
-		return -1;      //创建失败
+		TRACE0("未能创建状态栏\n");
+		return -1;      // 未能创建
 	}
 	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
 
-	
+	//// TODO: 如果不需要可停靠工具栏，则删除这三行
 	//m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
 	//EnableDocking(CBRS_ALIGN_ANY);
 	//DockControlBar(&m_wndToolBar);
 
-	this->SetTitle(_T("DBMS"));
 	return 0;
 }
 
@@ -74,11 +72,13 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
 	if( !CFrameWnd::PreCreateWindow(cs) )
 		return FALSE;
-
-
+	// TODO: 在此处通过修改
+	//  CREATESTRUCT cs 来修改窗口类或样式
+	cs.lpszName = CString("数据库管理系统");   // 改变窗口标题
 	return TRUE;
 }
 
+// CMainFrame 诊断
 
 #ifdef _DEBUG
 void CMainFrame::AssertValid() const
@@ -90,31 +90,32 @@ void CMainFrame::Dump(CDumpContext& dc) const
 {
 	CFrameWnd::Dump(dc);
 }
-#endif 
+#endif //_DEBUG
 
+
+// CMainFrame 消息处理程序
+
+void CMainFrame::OnExit()
+{
+	// TODO: 在此添加命令处理程序代码
+	AfxGetMainWnd()->PostMessage(WM_CLOSE, 0, 0); 
+}
 
 
 BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 {
-	// 创建分割栏
-	if (!m_wndSpliter.CreateStatic(this, 1, 2))
-	{
-		AfxMessageBox(_T("Failed to split window!"));
+	// TODO: 在此添加专用代码和/或调用基类
+	if (!m_wndSplitter.CreateStatic(this, 1, 2))
 		return FALSE;
-	}
+	if (!m_wndSplitter.CreateView(0, 0, RUNTIME_CLASS(CDBView), CSize(160, 200), pContext))
+		return FALSE;
+	if (!m_wndSplitter.CreateView(0, 1, RUNTIME_CLASS(CTableView), CSize(160, 200), pContext))
+		return FALSE;
 
-	// 添加一个新窗口
-	if(!m_wndSpliter.CreateView(0, 0, RUNTIME_CLASS(CDBView), CSize(200, 0), pContext))
-	{
-		return FALSE;
-	}
+	m_pTableView = (CTableView *)m_wndSplitter.GetPane(0,1);
+	m_pDBView = (CDBView *)m_wndSplitter.GetPane(0,0);
 
-	if (!m_wndSpliter.CreateView(0, 1, RUNTIME_CLASS(CRKDBMSView), CSize(0,0), pContext))
-	{
-		return FALSE;
-	}
 
 
 	return TRUE;
-
 }

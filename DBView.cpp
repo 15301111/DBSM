@@ -1,12 +1,19 @@
-// DBView.cpp : implementation file
+// DBView.cpp : 实现文件
 //
 
 #include "stdafx.h"
 #include "DBMS.h"
 #include "DBView.h"
-
-#include "DBMSDoc.h"
-
+#include "Resource.h"
+#include "MainFrm.h"
+#include "DBLogic.h"
+#include "TableLogic.h"
+#include "RecordLogic.h"
+#include "TableView.h"
+#include "FieldLogic.h"
+#include "Util.h"
+#include "ConditionQuery.h"
+#include "SystemLogic.h"
 
 // CDBView
 
@@ -22,15 +29,17 @@ CDBView::~CDBView()
 }
 
 BEGIN_MESSAGE_MAP(CDBView, CTreeView)
+	
 END_MESSAGE_MAP()
 
 
-// CDBView diagnostics
+// CDBView 诊断
 
 #ifdef _DEBUG
 void CDBView::AssertValid() const
 {
 	CTreeView::AssertValid();
+	CString ss;
 }
 
 #ifndef _WIN32_WCE
@@ -41,39 +50,3 @@ void CDBView::Dump(CDumpContext& dc) const
 #endif
 #endif //_DEBUG
 
-
-void CDBView::OnInitialUpdate()
-{
-	CTreeView::OnInitialUpdate();
-
-	CRKDBMSDoc* pDoc = (CRKDBMSDoc*)this->GetDocument();
-
-
-	CString strError = pDoc->GetError();
-
-	if (strError.GetLength() != 0)
-	{
-		
-		AfxMessageBox(strError);
-
-		//设置异常信息为空
-		pDoc->SetError(_T(""));
-		return;
-	}
-
-	m_imageList.DeleteImageList();
-
-	m_imageList.Create(16, 16, ILC_COLOR16 | ILC_MASK, 0, 4); 
-
-	m_imageList.Add(AfxGetApp()->LoadIcon(IDI_ICON_DATABASE));
-
-	CTreeCtrl &treeCtrl = this->GetTreeCtrl();
-
-	treeCtrl.SetImageList(&m_imageList, TVSIL_NORMAL);
-
-	CString strDBName = pDoc->GetDBEntity().GetName();
-
-	HTREEITEM hRoot = treeCtrl.InsertItem(strDBName, 0, 0, NULL);
-
-	treeCtrl.Expand(hRoot, TVE_EXPAND);
-}

@@ -1,13 +1,15 @@
 #pragma once
+#define DBVIEW_DB_ITEM		0
+#define DBVIEW_TABLE_ITEM	1
 
-
+// CDBView 视图
 
 class CDBView : public CTreeView
 {
 	DECLARE_DYNCREATE(CDBView)
 
 protected:
-	CDBView();          
+	CDBView();           // 动态创建所使用的受保护的构造函数
 	virtual ~CDBView();
 
 public:
@@ -20,11 +22,25 @@ public:
 
 protected:
 	DECLARE_MESSAGE_MAP()
-public:
-	virtual void OnInitialUpdate();	//视图初始化函数
 
 private:
-	CImageList m_imageList;	//	树视图
+	CImageList m_treeImageList;
+public:
+
+	HTREEITEM m_hCurrDBItem;
+	HTREEITEM m_hCurrTBItem;
+
+	CTreeCtrl *m_pTreeCtrl;
+
+	bool m_bAddDB;  //状态是否为添加数据库
+	bool m_bAddTB;  //状态是否为添加表
+
+	CString GetSelectedDBName();//得到当前被选择的数据库名
+	CString GetSelectedTBName();//得到当前被选择的表名
+	void DisplayDBList();		//显示数据库列表
+	
+	void GetDBAndTableName(CString &dbName,CString &tbName);
+
 };
 
 
