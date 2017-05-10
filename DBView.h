@@ -1,15 +1,18 @@
 #pragma once
-#define DBVIEW_DB_ITEM		0
-#define DBVIEW_TABLE_ITEM	1
 
-// CDBView 视图
-
+#include "TableEntity.h"	
+#include "FieldEntity.h"	
+// CDBView view
+/****************************************************
+[ClassName] CDBView
+[Function] Shows the database structure view class, inherit from CTreeView
+****************************************************/
 class CDBView : public CTreeView
 {
 	DECLARE_DYNCREATE(CDBView)
 
 protected:
-	CDBView();           // 动态创建所使用的受保护的构造函数
+	CDBView();           // protected constructor used by dynamic creation
 	virtual ~CDBView();
 
 public:
@@ -22,25 +25,22 @@ public:
 
 protected:
 	DECLARE_MESSAGE_MAP()
+	virtual void OnInitialUpdate();	//	View initialization function
+	virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
+
+protected:
+	CTreeCtrl* m_pTreeCtrl;	// Tree control
 
 private:
-	CImageList m_treeImageList;
+	HTREEITEM AddTableNode(CTableEntity* pTable);	// Insert a table item
+	HTREEITEM AddFieldNode(CFieldEntity* pField, HTREEITEM hTableItem); // Insert the field item
+	HTREEITEM GetTableItem(CString strTableName);	// Get to table item
+private:
+	CImageList m_imageList;	//	Tree image list
+
 public:
-
-	HTREEITEM m_hCurrDBItem;
-	HTREEITEM m_hCurrTBItem;
-
-	CTreeCtrl *m_pTreeCtrl;
-
-	bool m_bAddDB;  //状态是否为添加数据库
-	bool m_bAddTB;  //状态是否为添加表
-
-	CString GetSelectedDBName();//得到当前被选择的数据库名
-	CString GetSelectedTBName();//得到当前被选择的表名
-	void DisplayDBList();		//显示数据库列表
-	
-	void GetDBAndTableName(CString &dbName,CString &tbName);
-
+	afx_msg void OnTvnSelchanged(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMRClick(NMHDR *pNMHDR, LRESULT *pResult);
 };
 
 

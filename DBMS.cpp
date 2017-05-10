@@ -1,14 +1,16 @@
 
-// DBMS.cpp : 定义应用程序的类行为。
+// RKDBMS.cpp : Defines the class behaviors for the application.
+//
 
 #include "stdafx.h"
 #include "afxwinappex.h"
 #include "afxdialogex.h"
-#include "DBMS.h"
+#include "RKDBMS.h"
 #include "MainFrm.h"
 
-#include "DBMSDoc.h"
-#include "DBMSView.h"
+#include "RKDBMSDoc.h"
+#include "RKDBMSView.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -19,57 +21,64 @@
 
 BEGIN_MESSAGE_MAP(CRKDBMSApp, CWinApp)
 	ON_COMMAND(ID_APP_ABOUT, &CRKDBMSApp::OnAppAbout)
-		// 基于文件的标准文档命令
+	// Standard file based document commands
 	ON_COMMAND(ID_FILE_NEW, &CWinApp::OnFileNew)
 	ON_COMMAND(ID_FILE_OPEN, &CWinApp::OnFileOpen)
-	// 标准打印设置命令
+	// Standard print setup command
 	ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinApp::OnFilePrintSetup)
 END_MESSAGE_MAP()
 
 
+// CRKDBMSApp construction
 
 CRKDBMSApp::CRKDBMSApp()
 {
+	// support Restart Manager
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_ALL_ASPECTS;
 #ifdef _MANAGED
-	// 如果应用程序是利用公共语言运行时支持(/clr)构建的，则:
-	//     1) 必须有此附加设置，“重新启动管理器”支持才能正常工作。
-	//     2) 在您的项目中，您必须按照生成顺序向 System.Windows.Forms 添加引用。
+	// If the application is built using Common Language Runtime support (/clr):
+	//     1) This additional setting is needed for Restart Manager support to work properly.
+	//     2) In your project, you must add a reference to System.Windows.Forms in order to build.
 	System::Windows::Forms::Application::SetUnhandledExceptionMode(System::Windows::Forms::UnhandledExceptionMode::ThrowException);
 #endif
 
-// TODO: 将以下应用程序 ID 字符串替换为唯一的 ID 字符串；建议的字符串格式
-	//为 CompanyName.ProductName.SubProduct.VersionInformation
+	// TODO: replace application ID string below with unique ID string; recommended
+	// format for string is CompanyName.ProductName.SubProduct.VersionInformation
 	SetAppID(_T("RKDBMS.AppID.NoVersion"));
 
-     // TODO: 在此处添加构造代码，
-	// 将所有重要的初始化放置在 InitInstance 中
+	// TODO: add construction code here,
+	// Place all significant initialization in InitInstance
 }
 
+// The one and only CRKDBMSApp object
+
+CRKDBMSApp theApp;	//  Unique global object, represent current application
 
 
-CRKDBMSApp theApp;	
+// CRKDBMSApp initialization
 
-
-
-
+/************************************************************************
+[FunctionName] InitInstance
+[Function] Application instance initialization function, the function called by the system
+[Argument] void
+[ReturnedValue] BOOL:TRUE if the operation is successful; otherwise FALSE.
+************************************************************************/
 BOOL CRKDBMSApp::InitInstance()
 {
-	// 如果一个运行在 Windows XP 上的应用程序清单指定要
-	// 使用 ComCtl32.dll 版本 6 或更高版本来启用可视化方式，
-	//则需要 InitCommonControlsEx()。否则，将无法创建窗口。
+	// InitCommonControlsEx() is required on Windows XP if an application
+	// manifest specifies use of ComCtl32.dll version 6 or later to enable
+	// visual styles.  Otherwise, any window creation will fail.
 	INITCOMMONCONTROLSEX InitCtrls;
 	InitCtrls.dwSize = sizeof(InitCtrls);
-	// 将它设置为包括所有要在应用程序中使用的
-	// 公共控件类。
+	// Set this to include all the common control classes you want to use
+	// in your application.
 	InitCtrls.dwICC = ICC_WIN95_CLASSES;
 	InitCommonControlsEx(&InitCtrls);
 
 	CWinApp::InitInstance();
 
 
-	
-	// 初始化 OLE 库
+	// Initialize OLE libraries
 	if (!AfxOleInit())
 	{
 		AfxMessageBox(IDP_OLE_INIT_FAILED);
@@ -80,52 +89,60 @@ BOOL CRKDBMSApp::InitInstance()
 
 	EnableTaskbarInteraction(FALSE);
 
-    // 使用 RichEdit 控件需要  AfxInitRichEdit2()	
+	// AfxInitRichEdit2() is required to use RichEdit control	
 	// AfxInitRichEdit2();
 
-	// 标准初始化
-	// 如果未使用这些功能并希望减小
-	// 最终可执行文件的大小，则应移除下列
-	// 不需要的特定初始化例程
-	// 更改用于存储设置的注册表项
-	// TODO: 应适当修改该字符串，
-	// 例如修改为公司或组织名
-	SetRegistryKey(_T("应用程序向导生成的本地应用程序"));
-	LoadStdProfileSettings(4);  // 加载标准 INI 文件选项(包括 MRU)
+	// Standard initialization
+	// If you are not using these features and wish to reduce the size
+	// of your final executable, you should remove from the following
+	// the specific initialization routines you do not need
+	// Change the registry key under which our settings are stored
+	// TODO: You should modify this string to be something appropriate
+	// such as the name of your company or organization
+	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
+	LoadStdProfileSettings(4);  // Load standard INI file options (including MRU)
 
 
+	// Register the application's document templates.  Document templates
+	//  serve as the connection between documents, frame windows and views
 
 	CSingleDocTemplate* pDocTemplate;
 	pDocTemplate = new CSingleDocTemplate(
-		IDR_MAINFRAME,                   
-		RUNTIME_CLASS(CRKDBMSDoc),      
-		RUNTIME_CLASS(CMainFrame),      
-		RUNTIME_CLASS(CRKDBMSView));    
+		IDR_MAINFRAME,                   // Resource
+		RUNTIME_CLASS(CRKDBMSDoc),       // Document class of the application 
+		RUNTIME_CLASS(CMainFrame),       // Frame window of the application 
+		RUNTIME_CLASS(CRKDBMSView));     // View class of the application
 	if (!pDocTemplate)
 		return FALSE;
-	AddDocTemplate(pDocTemplate);         
+	AddDocTemplate(pDocTemplate);        // Load the document template class object to the document template list
 
 
 
-
+	// Parse command line for standard shell commands, DDE, file open
 	CCommandLineInfo cmdInfo;
 	ParseCommandLine(cmdInfo);
 
 
 
-	// 调度在命令行中指定的命令。如果
-	// 用 /RegServer、/Register、/Unregserver 或 /Unregister 启动应用程序，则返回 FALSE。
+	// Dispatch commands specified on the command line.  Will return FALSE if
+	// app was launched with /RegServer, /Register, /Unregserver or /Unregister.
 	if (!ProcessShellCommand(cmdInfo))
 		return FALSE;
 
-	// 唯一的一个窗口已初始化，因此显示它并对其进行更新
+	// The one and only window has been initialized, so show and update it
 	m_pMainWnd->ShowWindow(SW_SHOW);
 	m_pMainWnd->UpdateWindow();
-
+	// call DragAcceptFiles only if there's a suffix
+	//  In an SDI app, this should occur after ProcessShellCommand
 	return TRUE;
 }
 
-
+/********************************************************
+[FunctionName] ExitInstance
+[Function] Exit the application instance
+[Argument] void
+[ReturnedValue] int: Zero if the operation is successful; otherwise non-zero.
+********************************************************/
 int CRKDBMSApp::ExitInstance()
 {
 	AfxOleTerm(FALSE);
@@ -133,20 +150,23 @@ int CRKDBMSApp::ExitInstance()
 	return CWinApp::ExitInstance();
 }
 
+// CRKDBMSApp message handlers
 
 
-
-
+// CAboutDlg dialog used for App About
 
 class CAboutDlg : public CDialogEx
 {
 public:
 	CAboutDlg();
 
+// Dialog Data
 	enum { IDD = IDD_ABOUTBOX };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);   
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+
+// Implementation
 protected:
 	DECLARE_MESSAGE_MAP()
 };
@@ -163,13 +183,14 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
+// App command to run the dialog
 void CRKDBMSApp::OnAppAbout()
 {
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();
 }
 
-
+// CRKDBMSApp message handlers
 
 
 

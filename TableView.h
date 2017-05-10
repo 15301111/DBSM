@@ -1,21 +1,18 @@
 #pragma once
-#include "afxcmn.h"
-#include "Global.h"
-#include "FieldEntity.h"
-#include "RecordEntity.h"
+#include "TableEntity.h"	
+#include "FieldEntity.h"	
 
-#define TABLEVIEW_VALID  0
-#define TABLEVIEW_FIELD  1
-#define TABLEVIEW_RECORD 2
-
-// CTableView 视图
-
+// CTableView view
+/******************************************************
+[ClassName]	CTableView
+[Function]	Table structure view class, display table structure, inherit from CListView
+******************************************************/
 class CTableView : public CListView
 {
 	DECLARE_DYNCREATE(CTableView)
 
 protected:
-	CTableView();           // 动态创建所使用的受保护的构造函数
+	CTableView();           // protected constructor used by dynamic creation
 	virtual ~CTableView();
 
 public:
@@ -25,21 +22,19 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 #endif
+protected:
+	CListCtrl* m_pListCtrl;	// List control
+	CTableEntity* m_pTable;	// Pointer to the table entity
+
+	// Add field
+	void AddField(CFieldEntity* pField);
 
 protected:
 	DECLARE_MESSAGE_MAP()
-	CListCtrl *m_ListCtrl;
 public:
 	virtual void OnInitialUpdate();
-	int m_curView;       //判断右边的表是字段还是记录
+	virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
 
-	int m_iRow;
-	int m_iColumn;
-	int m_iCount;
-
-	void DisplayRecords(vector<CRecordEntity> &rcdlist,vector<CFieldEntity> &fieldList);
-	void DisplayFields(vector<CFieldEntity> &fieldList);
-	void ClearTable();
 	afx_msg void OnNMRClick(NMHDR *pNMHDR, LRESULT *pResult);
 };
 

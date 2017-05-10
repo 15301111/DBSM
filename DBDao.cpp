@@ -1,7 +1,14 @@
 #include "StdAfx.h"
 #include "DBDao.h"
 
-
+/**************************************************
+[FunctionName] Create
+[Function] Create database, insert a record into ruanko.db file.
+[Argument]	const CString strFilepath: The database file path
+		CDBEntity db: The database entities, including the database name.
+		bool bAppend: Whether write file in a additional way.true if additional and false if overwritten
+[ReturnedValue]	bool: True if the operation is successful; otherwise false.
+**************************************************/
 bool CDBDao::Create(const CString strFilepath, CDBEntity db, bool bAppend)
 {
 	try
@@ -28,40 +35,48 @@ bool CDBDao::Create(const CString strFilepath, CDBEntity db, bool bAppend)
 
 		return true;
 	}
-	catch(CException* e)
+	catch(CException* e)// Catch exceptions
 	{
-		
+		// Delete the exception information
 		e->Delete();
-	
+		// Throw a custom exception
 		throw new CAppException(_T("Failed to create the database file!"));
 	}
-	catch(...)	
+	catch(...)	// Catch other exceptions
 	{
+		// Throw a custom exception
 		throw new CAppException(_T("Failed to create the database file!"));
 	}
 
 	return false;
 }
 
+/**************************************************
+[FunctionName]	GetDatabase
+[Function]	Read the database information
+[Argument]	const CString strFilepath: The database file path
+		CDBEntity db: The database entities, including the database name.
+[ReturnedValue]	bool: True if the operation is successful; otherwise false.
+**************************************************/
 bool CDBDao::GetDatabase(const CString strFilepath, CDBEntity &db)
 {
 	try
 	{
-		
+		// Verify the file name
 		CString strDBName = db.GetName();
 		if (strDBName.GetLength() == 0)
 		{
 			return false;
 		}
 		
-		
+		// Open the file in a read-only way
 		CFile file;
 		if (file.Open(strFilepath, CFile::modeRead | CFile::shareDenyNone) == FALSE)
 		{
 			return false;
 		}
 
-		
+		// Read the database information
 		bool bExist = false;
 		DatabaseBlock sdb;
 
@@ -80,82 +95,17 @@ bool CDBDao::GetDatabase(const CString strFilepath, CDBEntity &db)
 
 		return bExist;
 	}
-	catch(CException* e)
+	catch(CException* e)// Catch exceptions
 	{
+		// Delete the exception information
 		e->Delete();
+		// Throw a custom exception
 		throw new CAppException(_T("Failed to create the database file!"));
 	}
-	catch(...)	
+	catch(...)	// Catch other exceptions
 	{
+		// Throw a custom exception
 		throw new CAppException(_T("Failed to create the database file!"));
-	}
-	return false;
-}
-
-
-
-bool CDBDao::CreateFile(const CString strFileName)
-{
-	try
-	{
-		for (int i = 0; i < strFileName.GetLength(); i++)
-		{
-			if ( (_T('\\') == strFileName.GetAt(i)
-				|| _T('/') == strFileName.GetAt(i))
-				&& 2 != i
-				)
-			{
-				CString strDirectory;
-				strDirectory = strFileName.Left(i);
-				if(!CreateDirectory(strDirectory, NULL) && 183 != GetLastError())
-				{
-					return false;
-				}
-			}
-		}
-
-		CFile file;
-		if (!file.Open(strFileName, CFile::modeCreate))
-		{
-			return false;
-		}
-		file.Close();
-
-		return true;
-	}
-	catch (CException* e)
-	{
-		e->Delete();
-		throw new CAppException(_T("Failed to create file!"));
-	}
-	catch (...)
-	{
-		throw new CAppException(_T("Failed to create file!"));
-	}
-
-	return false;
-}
-
-
-bool CDBDao::IsValidFile(const CString strPath)
-{
-	try
-	{
-		CFile file;
-		if (file.Open(strPath, CFile::modeRead | CFile::shareDenyNone) == TRUE)
-		{
-			file.Close();
-			return true;
-		}
-	}
-	catch (CException* e)
-	{
-		e->Delete();
-		throw new CAppException(_T("Failed to open file"));
-	}
-	catch (...)
-	{
-		throw new CAppException(_T("Failed to open file"));
 	}
 	return false;
 }

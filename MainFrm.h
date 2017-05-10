@@ -1,32 +1,31 @@
 
-// MainFrm.h : CMainFrame 类的接口
+// MainFrm.h : interface of the CMainFrame class
 //
 
 #pragma once
-#include "Global.h"
-#include "afxext.h"
-#include "TableView.h"
-#include "DBView.h"
 
-
+/**********************************************************
+[ClassName] CMainFrame
+[Function] The frame window class, provide the application's window.
+**********************************************************/
 class CMainFrame : public CFrameWnd
 {
 	
-protected: // 仅从序列化创建
+protected: // create from serialization only
 	CMainFrame();
 	DECLARE_DYNCREATE(CMainFrame)
 
-// 特性
+// Attributes
 public:
 
-// 操作
+// Operations
 public:
 
-// 重写
+// Overrides
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 
-// 实现
+// Implementation
 public:
 	virtual ~CMainFrame();
 #ifdef _DEBUG
@@ -34,30 +33,26 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
-protected:  // 控件条嵌入成员
-	CToolBar          m_wndToolBar;
-	CStatusBar        m_wndStatusBar;
+protected:  // control bar embedded members
+	CToolBar          m_wndToolBar;     // The toolbar object
+	CStatusBar        m_wndStatusBar;   // The status bar object
+	CSplitterWnd      m_wndSpliter;     // Separation of the window
+	BOOL	m_bOpenDatabase;			// Whether has opened database
 
-// 生成的消息映射函数
+// Generated message map functions
 protected:
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);  // Function of creating frame window 
 	DECLARE_MESSAGE_MAP()
 
-public:
-	CTableView *m_pTableView;  //右边显示数据视图指针
-	CDBView *m_pDBView;			//左边树状图窗口指针
-
-	afx_msg void OnExit();
 	virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext);
-protected:
-	CSplitterWnd m_wndSplitter;
-	
 public:
-	afx_msg void OnCrtDB();
-	afx_msg void OnOpenDB();
-	afx_msg void OnRenameDB();
-	afx_msg void OnInitDB();
-	afx_msg void OnLookLog();
+	afx_msg void OnNewTable();
+	afx_msg void OnAddField();
+	// Switch the view
+	void SwitchView(int nViewType);
+	afx_msg void OnOpenDatabase();
+	afx_msg void OnUpdateOpenDatabase(CCmdUI *pCmdUI);
+	afx_msg void OnEditTable();
 };
 
 

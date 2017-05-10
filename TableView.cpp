@@ -1,14 +1,12 @@
-// TableView.cpp : 实现文件
+// TableView.cpp : implementation file
 //
 
 #include "stdafx.h"
-#include "DBMS.h"
-#include "MainFrm.h"
+#include "RKDBMS.h"
 #include "TableView.h"
-#include "FieldLogic.h"
-#include "FieldDialog.h"
-#include "RcdDialog.h"
-#include "RecordLogic.h"
+
+#include "Global.h"
+#include "RKDBMSDoc.h"
 
 
 // CTableView
@@ -17,7 +15,7 @@ IMPLEMENT_DYNCREATE(CTableView, CListView)
 
 CTableView::CTableView()
 {
-
+	m_pListCtrl = NULL;
 }
 
 CTableView::~CTableView()
@@ -29,7 +27,7 @@ BEGIN_MESSAGE_MAP(CTableView, CListView)
 END_MESSAGE_MAP()
 
 
-// CTableView 诊断
+// CTableView diagnostics
 
 #ifdef _DEBUG
 void CTableView::AssertValid() const
@@ -46,151 +44,133 @@ void CTableView::Dump(CDumpContext& dc) const
 #endif //_DEBUG
 
 
-// CTableView 消息处理程序
+// CTableView message handlers
 
-
+/***********************************************
+[FunctionName]	OnInitialUpdate
+[Function]	View initialization function, initialize tree view
+[Argument]	void
+[ReturnedValue]	void
+***********************************************/
 void CTableView::OnInitialUpdate()
 {
 	CListView::OnInitialUpdate();
 
-	// TODO: 在此添加专用代码和/或调用基类
-	m_ListCtrl = &GetListCtrl();
+	// Get list control
+	m_pListCtrl = &this->GetListCtrl();
+	
+	// Get the default style of list control
+	DWORD dwStyle = ::GetWindowLong(m_pListCtrl->m_hWnd ,GWL_STYLE);
 
-	LONG lStyle;
-	lStyle = GetWindowLong(m_ListCtrl->m_hWnd, GWL_STYLE);   // 获取当前窗口风格
-	lStyle &= ~LVS_TYPEMASK;                              // 清除显示方式位
-	lStyle |= LVS_REPORT;
-	SetWindowLong(m_ListCtrl->m_hWnd, GWL_STYLE, lStyle); 
+	// Set the style of the list control
+	dwStyle |= LVS_REPORT;	// Report style
+	::SetWindowLong (m_pListCtrl->m_hWnd ,GWL_STYLE, dwStyle);
+	
+	// Set extended style
+	m_pListCtrl->SetExtendedStyle(LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT);
 
-	DWORD dwStyle = m_ListCtrl->GetExtendedStyle();
-	dwStyle |= LVS_EX_FULLROWSELECT;                      // 选中某行使整行高亮
-	dwStyle |= LVS_EX_GRIDLINES;                          // 网格线
-	m_ListCtrl->SetExtendedStyle(dwStyle);                   // 设置扩展风格
-
-	//初始化的视图类型为非法视图
-	m_curView = TABLEVIEW_VALID;
-
+	// Initialize the column of the list control
+	m_pListCtrl->InsertColumn(0, _T("Field"), LVCFMT_CENTER, 100);
+	m_pListCtrl->InsertColumn(1, _T("Data Type"), LVCFMT_CENTER, 100);
+	m_pListCtrl->InsertColumn(2, _T("Not Null"), LVCFMT_CENTER, 200);
+	m_pListCtrl->InsertColumn(3, _T("Primary Key"), LVCFMT_CENTER,100);
+	m_pListCtrl->InsertColumn(4, _T("Default Value"), LVCFMT_CENTER,200);
 }
 
-
-
-void CTableView::DisplayRecords(vector<CRecordEntity> &rcdlist,vector<CFieldEntity> &fieldList)
+/**************************************************************
+[FunctionName]	OnUpdate
+[Function]	View update function
+[Argument]	CView* pSender: Points to the view that modified the document, or NULL if all views are to be updated.
+		LPARAM lHint: Contains information about the modifications.
+		CObject* pHint: Points to an object storing information about the modifications.
+[ReturnedValue]	void
+**************************************************************/
+void CTableView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
-	m_curView = TABLEVIEW_RECORD;	//视图类型设置为记录视图
-
-	//清除表
-	//this->ClearTable();
-
-	int columnNum = fieldList.size()+1;
-
-	m_ListCtrl->InsertColumn(0, CString("#"), LVCFMT_LEFT, 0);
-	for (int i = 1; i < columnNum; i++)
+	if(pSender == NULL)
 	{
-		m_ListCtrl->InsertColumn(i, fieldList[i-1].GetName(), LVCFMT_LEFT, 150);
-	}
-
-	int rcdNum = rcdlist.size();
-	for (int i = 0; i < rcdNum; i++)
-	{
-		m_ListCtrl->InsertItem(i,CUtil::IntegerToString(rcdlist[i].GetId()));
-		for (int j = 1; j < columnNum; j++)
+		// Get the object of the document
+		CRKDBMSDoc* pDoc = (CRKDBMSDoc*)this->GetDocument();
+		switch(lHint)
 		{
-			m_ListCtrl->SetItemText(i, j, rcdlist[i].GetValue(fieldList[j-1].GetName()));
+		case UPDATE_CREATE_TABLE:
+			{
+				m_pTable = (CTableEntity*)pHint;
+			}
+			break;
+		case UPDATE_EDIT_TABLE:
+			{
+				m_pTable = (CTableEntity*)pHint;
+
+				int nFieldNum = m_pTable->GetFieldNum();
+				for (int i = 0; i < nFieldNum; i++)
+				{
+					AddField(m_pTable->GetFieldAt(i));
+				}
+			}
+			break;
+		case UPDATE_ADD_FIELD:
+			{
+				if(m_pTable == pDoc->GetEditTable())
+				{
+					CFieldEntity* pField = (CFieldEntity*)pHint;
+					AddField(pField);
+				}
+			}
+			break;
+		default:
+			break;
 		}
 	}
 }
 
 
-void CTableView::DisplayFields(vector<CFieldEntity> &fieldList)
+
+/**************************************************************
+[FunctionName]	AddField
+[Function]	Display the field information int the list
+[Argument]	CFieldEntity* pField: Pointer to the entity object of field information
+[ReturnedValue]	void
+**************************************************************/
+void CTableView::AddField(CFieldEntity* pField)
 {
-	m_curView = TABLEVIEW_FIELD; //视图类型设置为字段视图
+	// Get the number of the row int the list
+	int nCount = m_pListCtrl->GetItemCount();
 
-	//this->ClearTable();
-
-	m_ListCtrl->InsertColumn(0, CString("#"), LVCFMT_LEFT, 0);
-	m_ListCtrl->InsertColumn(1, CString("字段名"), LVCFMT_LEFT, 100);
-	m_ListCtrl->InsertColumn(2, CString("顺序"), LVCFMT_LEFT, 0);
-	m_ListCtrl->InsertColumn(3, CString("类型"), LVCFMT_LEFT, 80);
-	m_ListCtrl->InsertColumn(4, CString("长度"), LVCFMT_LEFT, 50);
-	m_ListCtrl->InsertColumn(5, CString("最小值"), LVCFMT_LEFT, 100);
-	m_ListCtrl->InsertColumn(6, CString("最大值"), LVCFMT_LEFT, 100);
-	m_ListCtrl->InsertColumn(7, CString("默认值"), LVCFMT_LEFT, 100);
-	m_ListCtrl->InsertColumn(8, CString("主键"), LVCFMT_LEFT, 40);
-	m_ListCtrl->InsertColumn(9, CString("允许空值"), LVCFMT_LEFT, 70);
-	m_ListCtrl->InsertColumn(10, CString("唯一值"), LVCFMT_LEFT, 60);
-	m_ListCtrl->InsertColumn(11, CString("注释"), LVCFMT_LEFT, 100);
-
-	for (int i = 0; i < fieldList.size(); ++i)
-	{
-		m_ListCtrl->InsertItem(i,CUtil::IntegerToString(fieldList[i].GetId()));
-		m_ListCtrl->SetItemText(i, 1, fieldList[i].GetName());
-		m_ListCtrl->SetItemText(i, 2, CUtil::IntegerToString(fieldList[i].GetOrder()));
-		m_ListCtrl->SetItemText(i, 3, CUtil::GetDataType(fieldList[i].GetType()));
-		m_ListCtrl->SetItemText(i, 4, CUtil::IntegerToString(fieldList[i].GetLength()));
-		
-		int tempInt = fieldList[i].GetMin();
-		CString min = CUtil::IntegerToString(tempInt);
-		if(fieldList[i].GetMin()==-1) min="";
-		m_ListCtrl->SetItemText(i, 5, min);
-
-		tempInt = fieldList[i].GetMax();
-		CString max = CUtil::IntegerToString(tempInt);
-		if(fieldList[i].GetMax()==-1) max="";
-		m_ListCtrl->SetItemText(i, 6, max);
-		
-
-		m_ListCtrl->SetItemText(i, 7, fieldList[i].GetDefault());
-		m_ListCtrl->SetItemText(i, 8, CUtil::GetIcon(fieldList[i].GetIsPK()));
-		m_ListCtrl->SetItemText(i, 9, CUtil::GetIcon(fieldList[i].GetIsNull()));
-		m_ListCtrl->SetItemText(i, 10, CUtil::GetIcon(fieldList[i].GetIsUnique()));
-		m_ListCtrl->SetItemText(i, 11, fieldList[i].GetComment());
-	}
+	// Insert data into the list
+	m_pListCtrl->InsertItem(nCount, pField->GetName());	// Field name
+	
+	int nDataType = pField->GetDataType();				// Type
+	CString nTypeName = pField->GetTypeName(nDataType);
+	m_pListCtrl->SetItemText(nCount, 1, nTypeName);
 
 }
 
+/**************************************************************
+[FunctionName]	OnNMRClick
+[Function]	NM_RCLICK message response function of list control，display the right-click menu
+[Argument]	NMHDR *pNMHDR: Include the data of the selected item
+[ReturnedValue]	void
+**************************************************************/
 void CTableView::OnNMRClick(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
-	// TODO: 在此添加控件通知处理程序代码
+
+	// Convert NMHDR* type into NM_LISTVIEW* type
 	NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
-	m_iRow = pNMListView->iItem;
-	m_iColumn = pNMListView->iSubItem;
-	m_iCount = m_ListCtrl->GetItemCount();
+	// Get the row number and column number of the selected item
+	DWORD dwRow = pNMListView->iItem;  // The selected row
+	int nCol = pNMListView->iSubItem;  // The selected column
 
-
+	// Get the cursor coordinates
 	CPoint point;
 	GetCursorPos(&point);
-	CMenu MyMenu;
-	MyMenu.LoadMenu(IDR_MAINFRAME);
 
-	if (m_iRow >= 0 && m_iRow < m_iCount)
-	{
-		m_ListCtrl->SetItemState(m_iRow, LVIS_FOCUSED | LVIS_SELECTED, LVIS_FOCUSED | LVIS_SELECTED);
-		m_ListCtrl->SetSelectionMark(m_iRow);
-		
-	}
-	else
-	{
-		if (m_curView == TABLEVIEW_FIELD)
-		{
-			MyMenu.GetSubMenu(3)->EnableMenuItem(2, MF_BYPOSITION | MF_DISABLED);
-		}
-		else if (m_curView == TABLEVIEW_RECORD)
-		{
-			MyMenu.GetSubMenu(4)->EnableMenuItem(2, MF_BYPOSITION | MF_DISABLED);
-		}
-	}
+	// Load field menu resource to the CMenu object
+	CMenu* pMenu = this->GetParentFrame()->GetMenu()->GetSubMenu(MENU_FIELD);
 
-	if (m_curView == TABLEVIEW_FIELD)
-	{
-		CMenu* popup=MyMenu.GetSubMenu(3);
-		popup->TrackPopupMenu(TPM_LEFTALIGN | TPM_LEFTBUTTON, point.x, point.y, AfxGetMainWnd());
-	}
-	else if (m_curView == TABLEVIEW_RECORD)
-	{
-		CMenu* popup=MyMenu.GetSubMenu(4);
-		popup->TrackPopupMenu(TPM_LEFTALIGN | TPM_LEFTBUTTON, point.x, point.y, AfxGetMainWnd());
-	}
+	// Display the menu in the position of the cursor clicked
+	pMenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_LEFTBUTTON, point.x, point.y, AfxGetMainWnd());
 
 	*pResult = 0;
 }

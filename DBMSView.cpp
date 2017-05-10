@@ -1,17 +1,16 @@
 
-
-// DBMSView.cpp : CDBMSView 类的实现
+// RKDBMSView.cpp : implementation of the CRKDBMSView class
 //
 
 #include "stdafx.h"
-// SHARED_HANDLERS 可以在实现预览、缩略图和搜索筛选器句柄的
-// ATL 项目中进行定义，并允许与该项目共享文档代码。
+// SHARED_HANDLERS can be defined in an ATL project implementing preview, thumbnail
+// and search filter handlers and allows sharing of document code with that project.
 #ifndef SHARED_HANDLERS
-#include "DBMS.h"
+#include "RKDBMS.h"
 #endif
 
-#include "DBMSDoc.h"
-#include "DBMSView.h"
+#include "RKDBMSDoc.h"
+#include "RKDBMSView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -23,17 +22,17 @@
 IMPLEMENT_DYNCREATE(CRKDBMSView, CView)
 
 BEGIN_MESSAGE_MAP(CRKDBMSView, CView)
-	
+	// Standard printing commands
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
 END_MESSAGE_MAP()
 
-
+// CRKDBMSView construction/destruction
 
 CRKDBMSView::CRKDBMSView()
 {
-	// TODO: 在此处添加构造代码
+	// TODO: add construction code here
 
 }
 
@@ -43,14 +42,13 @@ CRKDBMSView::~CRKDBMSView()
 
 BOOL CRKDBMSView::PreCreateWindow(CREATESTRUCT& cs)
 {
-	// TODO: 在此处通过修改
-	//  CREATESTRUCT cs 来修改窗口类或样式
-
+	// TODO: Modify the Window class or styles here by modifying
+	//  the CREATESTRUCT cs
 
 	return CView::PreCreateWindow(cs);
 }
 
-
+// CRKDBMSView drawing
 
 void CRKDBMSView::OnDraw(CDC* /*pDC*/)
 {
@@ -59,30 +57,30 @@ void CRKDBMSView::OnDraw(CDC* /*pDC*/)
 	if (!pDoc)
 		return;
 
-// TODO: 在此处为本机数据添加绘制代码 
+	// TODO: add draw code for native data here
 }
 
 
-// CRKDBMSView 打印
+// CRKDBMSView printing
 
 BOOL CRKDBMSView::OnPreparePrinting(CPrintInfo* pInfo)
 {
-
+	// default preparation
 	return DoPreparePrinting(pInfo);
 }
 
 void CRKDBMSView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 {
-	// TODO: 添加额外的打印前进行的初始化过程
+	// TODO: add extra initialization before printing
 }
 
 void CRKDBMSView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 {
-	// TODO: 添加打印后进行的清理过程
+	// TODO: add cleanup after printing
 }
 
 
-// CDBMSView 诊断
+// CRKDBMSView diagnostics
 
 #ifdef _DEBUG
 void CRKDBMSView::AssertValid() const
@@ -95,7 +93,7 @@ void CRKDBMSView::Dump(CDumpContext& dc) const
 	CView::Dump(dc);
 }
 
-CRKDBMSDoc* CRKDBMSView::GetDocument() const 
+CRKDBMSDoc* CRKDBMSView::GetDocument() const // non-debug version is inline
 {
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CRKDBMSDoc)));
 	return (CRKDBMSDoc*)m_pDocument;
@@ -103,4 +101,4 @@ CRKDBMSDoc* CRKDBMSView::GetDocument() const
 #endif //_DEBUG
 
 
-// CDBMSView 消息处理程序
+// CRKDBMSView message handlers

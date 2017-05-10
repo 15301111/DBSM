@@ -1,33 +1,36 @@
 
-// DBMSView.h : CDBMSView 类的接口
+// RKDBMSView.h : interface of the CRKDBMSView class
 //
 
 #pragma once
-class CRKDBMSDoc; 
-
+class CRKDBMSDoc;  // Declare document class
+/************************************************************************
+[ClassName] CRKDBMSView
+[Function] View class, display the interface, inherit from CView class.
+************************************************************************/
 class CRKDBMSView : public CView
 {
-protected: 
+protected: // create from serialization only
 	CRKDBMSView();
 	DECLARE_DYNCREATE(CRKDBMSView)
 
-
+// Attributes
 public:
-	CRKDBMSDoc* GetDocument() const;   // 获取视图文件
+	CRKDBMSDoc* GetDocument() const;   // Get the document associated with views
 
-
+// Operations
 public:
 
-
+// Overrides
 public:
-	virtual void OnDraw(CDC* pDC);  
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs); 
+	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
+	virtual BOOL PreCreateWindow(CREATESTRUCT& cs); //Modify the view window style
 protected:
 	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
 	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
 	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
 
-
+// Implementation
 public:
 	virtual ~CRKDBMSView();
 #ifdef _DEBUG
@@ -37,12 +40,12 @@ public:
 
 protected:
 
-
+// Generated message map functions
 protected:
 	DECLARE_MESSAGE_MAP()
 };
 
-#ifndef _DEBUG  //DBMSView.cpp 中的调试版本
+#ifndef _DEBUG  // debug version in RKDBMSView.cpp
 inline CRKDBMSDoc* CRKDBMSView::GetDocument() const
    { return reinterpret_cast<CRKDBMSDoc*>(m_pDocument); }
 #endif

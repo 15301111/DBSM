@@ -1,32 +1,40 @@
-// DBMSDoc.h : CDBMSDoc 类的接口
+
+// RKDBMSDoc.h : interface of the CRKDBMSDoc class
 //
+
 
 #pragma once
 
-#include "DBEntity.h"	
+#include "DBEntity.h"		
+#include "TableEntity.h"	
+#include "FieldEntity.h"	
 
-
+/*****************************************************
+[ClassName] CRKDBMSDoc
+[Function] Document class, implement procedures logic operation related to the interface, and maintain and manage data.
+*****************************************************/
 class CRKDBMSDoc : public CDocument
 {
-protected:  // 仅从序列化创建
+protected: // create from serialization only
 	CRKDBMSDoc();
 	DECLARE_DYNCREATE(CRKDBMSDoc)
 
-// 特性
+// Attributes
+public:
+	
+// Operations
 public:
 
-// 操作
+// Overrides
 public:
-
-// 重写
-public:
-	virtual BOOL OnNewDocument();       // 创建新文件
+	virtual BOOL OnNewDocument();       // Create new docunment
 	virtual void Serialize(CArchive& ar);
+	virtual void OnCloseDocument();		// Close document.
 #ifdef SHARED_HANDLERS
 	virtual void OnDrawThumbnail(CDC& dc, LPRECT lprcBounds);
 #endif // SHARED_HANDLERS
 
-// 实现
+// Implementation
 public:
 	virtual ~CRKDBMSDoc();
 #ifdef _DEBUG
@@ -35,17 +43,31 @@ public:
 #endif
 
 private:
-	CDBEntity m_dbEntity;	
-	CString m_strError;		
+	CDBEntity m_dbEntity;	// Database entity object
+	CString m_strError;		// Exception information
+	TABLEARR m_arrTable;	// Table array
+	CTableEntity* m_pEditTable;	// Current edit form
 
+// Generated message map functions
 protected:
 	DECLARE_MESSAGE_MAP()
 
 #ifdef SHARED_HANDLERS
-	// 用于为搜索处理程序设置搜索内容的 Helper 函数
+	// Helper function that sets search content for a Search Handler
 #endif // SHARED_HANDLERS
+
+
 public:
-	CDBEntity GetDBEntity();
-	CString GetError();
-	void SetError(CString strError);
+	CDBEntity GetDBEntity();			//	Get the database entities
+	CString GetError();					//	Get exception information
+	void SetError(CString strError);	//	Set exception information
+
+	CTableEntity* CreateTable(CString strName);		// Create table
+	CTableEntity* GetEditTable();					// Get current form
+	CFieldEntity* AddField(CFieldEntity &field);	// Add field
+	void SetEditTable(CTableEntity* pTable);		// Set the current form
+	void SetEditTable(CString strTableName);		// Set the current form
+	CTableEntity* GetTable(int nIndex);				// Get table
+	int GetTableNum();								// Get the number of table information
+	void LoadTables(void);							// Load tables
 };
