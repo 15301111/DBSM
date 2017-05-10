@@ -11,13 +11,14 @@
 
 
 // CLoginDlg 对话框
+CSystemDAO sysDao;
 
 IMPLEMENT_DYNAMIC(CLoginDlg, CDialogEx)
 
 CLoginDlg::CLoginDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CLoginDlg::IDD, pParent)
-	, m_sUsername(_T("root"))
-	, m_sPwd(_T(""))
+	, m_sUsername(sysDao.GetCurrUserName(CString("log/u.temp")))
+	, m_sPwd(sysDao.GetCurrUserName(CString("log/u1.temp")))
 {
 
 }
@@ -52,8 +53,8 @@ void CLoginDlg::OnBnClickedOk()
 	if(sysLogic.VerifyLogin(m_sUsername,m_sPwd))
 	{
 		//记录当前登录的用户名
-		CSystemDAO sysDao;
-		sysDao.SaveCurrUserName(CString("log/u.temp"),m_sUsername,m_sPwd);
+		sysDao.SaveCurrUserName(CString("log/u.temp"),m_sUsername);
+		sysDao.SaveCurrPassword(CString("log/u1.temp"),m_sPwd);
 		CDialogEx::OnOK();
 	}
 	else
