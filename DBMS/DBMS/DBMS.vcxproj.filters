@@ -1,0 +1,279 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Global">
+      <UniqueIdentifier>{3dc25c87-becc-4ea3-81a6-605c574306e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DAO">
+      <UniqueIdentifier>{2b00494c-f987-4f99-8e10-f8b3022b5dd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{0d553820-7181-4b9d-a615-5aa4dda3a601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View">
+      <UniqueIdentifier>{b0b8947c-8e3e-442e-ae7b-8a75dc1370aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{914ec7a3-5290-42ae-bd67-dcc9ddea5668}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logic">
+      <UniqueIdentifier>{ab31a8df-e469-4081-9f26-42a3c494db09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Global\Head File">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Global\Source File">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Model\Head File">
+      <UniqueIdentifier>{aba69b02-c312-4406-963f-e9db9c40edd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Source File">
+      <UniqueIdentifier>{291ac882-63ea-44c3-9f2f-0be4f98b6673}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DAO\Source File">
+      <UniqueIdentifier>{09d74d54-a4dc-46f9-b41a-8ef3e27eaa85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DAO\Head File">
+      <UniqueIdentifier>{38bc725b-7f05-4fbf-8230-b7df303a6147}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logic\Head File">
+      <UniqueIdentifier>{37b1b8e1-e6c4-476c-9e9f-38fb8f55812f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logic\Source File">
+      <UniqueIdentifier>{8ac739b9-b8f9-4ef8-a37e-13117c98c125}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\Head File">
+      <UniqueIdentifier>{b1462d0c-1660-4a82-9321-e9b2c2a03bf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\Source File">
+      <UniqueIdentifier>{b3677cea-0a02-4417-897a-531c6678ca5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View\Head File">
+      <UniqueIdentifier>{24faa16b-cb6f-4fd2-bbe9-5d7b7890b76a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View\Source File">
+      <UniqueIdentifier>{62c51492-05c4-42fa-a9bc-e8842b085f54}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DBMS.h">
+      <Filter>Global\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Global\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Global\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Global\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="TableEntity.h">
+      <Filter>Model\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="FieldEntity.h">
+      <Filter>Model\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>Util\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="Global.h">
+      <Filter>Global\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="DBEntity.h">
+      <Filter>Model\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="DBDAO.h">
+      <Filter>DAO\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="RecordEntity.h">
+      <Filter>Model\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrm.h">
+      <Filter>View\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="DBMSView.h">
+      <Filter>View\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="TableDAO.h">
+      <Filter>DAO\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="FieldDAO.h">
+      <Filter>DAO\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="RecordDAO.h">
+      <Filter>DAO\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="DBLogic.h">
+      <Filter>Logic\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="TableLogic.h">
+      <Filter>Logic\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="FieldLogic.h">
+      <Filter>Logic\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="DBMSDoc.h">
+      <Filter>Global\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="RecordLogic.h">
+      <Filter>Logic\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryFile.h">
+      <Filter>Util\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="DBView.h">
+      <Filter>View\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="TableView.h">
+      <Filter>View\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="RcdDialog.h">
+      <Filter>View\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="FieldDialog.h">
+      <Filter>View\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="ConditionQuery.h">
+      <Filter>View\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginDlg.h">
+      <Filter>View\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemLogic.h">
+      <Filter>Logic\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemDAO.h">
+      <Filter>DAO\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="RegisterDlg.h">
+      <Filter>Global\Head File</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DBMS.cpp">
+      <Filter>Global\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Global\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="DBMSDoc.cpp">
+      <Filter>Global\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="TableEntity.cpp">
+      <Filter>Model\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="FieldEntity.cpp">
+      <Filter>Model\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Util.cpp">
+      <Filter>Util\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="DBEntity.cpp">
+      <Filter>Model\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="DBDAO.cpp">
+      <Filter>DAO\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="RecordEntity.cpp">
+      <Filter>Model\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="DBMSView.cpp">
+      <Filter>View\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrm.cpp">
+      <Filter>View\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="TableDAO.cpp">
+      <Filter>DAO\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="FieldDAO.cpp">
+      <Filter>DAO\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="RecordDAO.cpp">
+      <Filter>DAO\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="TableLogic.cpp">
+      <Filter>Logic\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="DBLogic.cpp">
+      <Filter>Logic\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="RecordLogic.cpp">
+      <Filter>Logic\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="FieldLogic.cpp">
+      <Filter>Logic\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryFile.cpp">
+      <Filter>Util\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="DBView.cpp">
+      <Filter>View\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="TableView.cpp">
+      <Filter>View\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="RcdDialog.cpp">
+      <Filter>View\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="FieldDialog.cpp">
+      <Filter>View\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="ConditionQuery.cpp">
+      <Filter>View\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="LoginDlg.cpp">
+      <Filter>View\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemLogic.cpp">
+      <Filter>Logic\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemDAO.cpp">
+      <Filter>DAO\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="RegisterDlg.cpp">
+      <Filter>Global\Source File</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DBMS.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\DBMS.rc2">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\DBMSDoc.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\DBMS.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\Toolbar.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\db.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\icon2.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\tb.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
