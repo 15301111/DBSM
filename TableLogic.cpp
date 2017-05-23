@@ -1,116 +1,161 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "TableLogic.h"
+#include "RecordDAO.h"
+#include "TableDAO.h"
+#include "FieldDAO.h"
+#include "DBDAO.h"
+#include "SystemLogic.h"
 
-/**************************************************
-[FunctionName]	CreateTable
-[Function]	Create a table
-[Argument]	const CString strDBName: Database name
-		CTableEntity &te: Table data entity
-[ReturnedValue]	bool: True if query the database successfully,otherwise false
-**************************************************/
-bool CTableLogic::CreateTable(const CString strDBName, CTableEntity &te)
+
+CTableLogic::CTableLogic(CString dbName)
 {
-	try
-	{
-		// Decide whether the file exists, if there is no,a file will be created.
-		CString strTableFile = m_fileLogic.GetTableFile(strDBName);
-		if (CFileHelper::IsValidFile(strTableFile) == false)
-		{
-			if(CFileHelper::CreateFile(strTableFile) == false)
-			{
-				return false;
-			}
-		}
-
-		// Set the path of the table definition file
-		te.SetTdfPath(m_fileLogic.GetTbDefineFile(strDBName, te.GetName()));
-
-		// Create table and save table information
-		if(m_daoTable.Create(strTableFile, te) == false)
-		{
-			return false;
-		}
-
-		return true;
-	}
-	catch (CAppException* e)
-	{
-		throw e;
-	}
-
-	return false;
+	this->dbPath = DEFAULT_ROOT + CString("/") + dbName + CString("/") + dbName + CString(".db");
+	this->m_sDBName=dbName;
 }
 
-/**************************************************
-[FunctionName]	AddField
-[Function]	Add table field
-[Argument]	const CString strDBName: Database name
-CTableEntity &te: Table information entity
-		CFieldEntity &fe: Field entity
-[ReturnedValue]	bool: True if adds field successfully, otherwise false
-**************************************************/
-bool CTableLogic::AddField(const CString strDBName, CTableEntity &te, CFieldEntity &fe)
-{	
-	try
-	{
-		// Decide whether the file exists, if there is no,a file will be created.
-		CString strTdfPath = te.GetTdfPath();
-		if (CFileHelper::IsValidFile(strTdfPath) == false)
-		{
-			if(CFileHelper::CreateFile(strTdfPath) == false)
-			{
-				return false;
-			}
-		}
 
-		// Save field information
-		if(m_daoTable.AddField(strTdfPath, fe) == false)
-		{
-			return false;
-		}
-		// Add field
-		te.AddField(fe);
-
-		return true;
-	}
-	catch (CAppException* e)
-	{
-		throw e;
-	}
-
-	return false;
+CTableLogic::~CTableLogic(void)
+{
 }
 
-/**************************************************
-[FunctionName]	GetTables
-[Function]	Query table information
-[Argument]	const CString strDBName: Database name
-		TABLEARR &arrTables: Table information list
-[ReturnedValue]	int: The number of the queried table
-**************************************************/
-int CTableLogic::GetTables(const CString strDBName, TABLEARR &arrTables)
+//根据表名建一张新表
+int CTableLogic::CreateTable(CString &tableName)
 {
-	int nCount = 0;
-
-	try
+	vector<CTableEntity> tlist=CTableDAO::ReadTableList(dbPath);
+	bool tExist=false;
+	for (vector<CTableEntity>::iterator ite=tlist.begin();ite!=tlist.end();++ite)
 	{
-		// Get the table description file
-		CString strTableFile = m_fileLogic.GetTableFile(strDBName);
-
-		// Query talbe information
-		nCount = m_daoTable.GetTables(strTableFile, arrTables);
-
-		// Read the table structure from the table definition file one by one
-		for (int i = 0; i < nCount; i++)
+		if(ite->GetName()==tableName)
 		{
-			CTableEntity* pTable = arrTables.GetAt(i);
-			m_daoTable.GetFields(pTable->GetTdfPath(), *pTable);
+			tExist=true;
+			break;
 		}
 	}
-	catch (CAppException e)
+	if(!tExist)
+	{	
+		int counter=CDBDAO::ReadDBCounter(dbPath);
+		CTableEntity table(++counter,tableName,m_sDBName);
+		if(CTableDAO::WriteAnTable(table,dbPath)&&
+			CTableDAO::InitTBFile(m_sDBName,tableName)&&
+			CTableDAO::SaveTableCounter(dbPath,counter))
+		{
+			CSystemLogic sysLogic;
+			sysLogic.WriteLog(CString("created an table:")+tableName+CString(" database: ")+m_sDBName);
+			return YES;
+		}
+		else
+			return ADD_ERROR;
+	}
+	else
 	{
-		throw e;
+		return TABLE_EXIST;
+	}
+}
+
+//删除表
+int CTableLogic::DeleteTable(CString &tableName)
+{
+	if(!CTableDAO::DeleteTableRecord(m_sDBName,tableName)||!CTableDAO::DeleteTableFile(m_sDBName,tableName))
+		return DELETE_ERROR;
+	
+	else
+	{
+		CSystemLogic sysLogic;
+		sysLogic.WriteLog(CString("deleted an table:")+tableName+CString(" database: ")+m_sDBName);
+		return YES;	
+	}
+		
+	
+}
+
+//修改表名
+int CTableLogic::ModifyTBName(CString &tableName,CString &newTableName)
+{
+	vector<CTableEntity> tblist=CTableDAO::ReadTableList(dbPath);
+	CTableEntity newTable;
+	bool bExist=false;
+	for (vector<CTableEntity>::iterator ite=tblist.begin();ite!=tblist.end();++ite)
+	{
+		if(ite->GetName()==newTableName)
+		{
+			bExist=true;
+		}
+		if (ite->GetName() == tableName)
+		{
+			newTable = *ite;
+			newTable.SetName(newTableName);
+		}
 	}
 
-	return nCount;
+	if (bExist)
+		return DB_EXIST;
+	else
+	{
+		if (!CTableDAO::ModifyTableName(newTable, dbPath) ||
+			!CTableDAO::ModifyDirName(tableName, newTableName, m_sDBName))
+			return MODIFY_ERROR;
+		else
+		{
+			CSystemLogic sysLogic;
+			sysLogic.WriteLog(CString("modified an table:")+tableName+CString("->")+newTableName+CString(" database: ")+m_sDBName);
+			return YES;
+		}
+	
+	}
+}
+
+//清空表数据
+int CTableLogic::ClearTableData(CString &tableName)
+{
+	vector<CTableEntity> tlist=CTableDAO::ReadTableList(dbPath);
+	bool tExist=false;
+	for (vector<CTableEntity>::iterator ite=tlist.begin();ite!=tlist.end();++ite)
+	{
+		if(ite->GetName()==tableName)
+		{
+			tExist=true;
+			break;
+		}
+	}
+	if(tExist)
+	{
+		//删除指定表的数据信息
+		CString trdPath=DEFAULT_ROOT+CString("/")+this->m_sDBName+CString("/")+tableName+CString(".trd");
+		if(CRecordDAO::DeleteAllRecord(trdPath))
+		{
+			CSystemLogic sysLogic;
+			sysLogic.WriteLog(CString("deteted all record of table:")+tableName+CString(" database: ")+m_sDBName);
+			return YES;
+		}
+		else
+			return NO;
+	}
+	else
+	{
+		return TABLE_NOT_EXIST;
+	}	
+}
+
+//读取指定页的记录数
+vector<CRecordEntity> CTableLogic::LookTable(IN int page,IN CString &tableName,OUT vector<CFieldEntity> &fieldList)
+{
+	CString trdPath=DEFAULT_ROOT+CString("/")+this->m_sDBName+CString("/")+tableName+CString(".trd");
+	CString tdfPath=DEFAULT_ROOT+CString("/")+this->m_sDBName+CString("/")+tableName+CString(".tdf");
+	fieldList=CFieldDAO::ReadFieldList(tdfPath);
+	return CRecordDAO::ReadRecordList(page,DEFAULT_PAGE_RECORDNUM,trdPath,CFieldDAO::ReadFieldList(tdfPath));
+}
+
+
+vector<CRecordEntity> CTableLogic::ConditionQuery(IN map<CString,CString> condition,IN CString &tableName,
+		OUT vector<CFieldEntity> &fieldList)
+{
+	CString trdPath=DEFAULT_ROOT+CString("/")+this->m_sDBName+CString("/")+tableName+CString(".trd");
+	CString tdfPath=DEFAULT_ROOT+CString("/")+this->m_sDBName+CString("/")+tableName+CString(".tdf");
+	fieldList=CFieldDAO::ReadFieldList(tdfPath);
+	return CRecordDAO::ReadListWithCondition(trdPath,condition);
+}
+
+vector<CTableEntity> CTableLogic::GetTableList()
+{
+	return CTableDAO::ReadTableList(this->dbPath);
 }
