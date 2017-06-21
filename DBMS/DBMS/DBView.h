@@ -60,6 +60,7 @@ public:
 	afx_msg void OnRecoveryDB();
 	afx_msg void OnClearTable();
 	afx_msg void OnLookLog();
+	//afx_msg void OnPaint();
 };
 
 

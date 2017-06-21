@@ -44,7 +44,7 @@ vector<CString> CBinaryFile::ReadAll(CString &fileName){
 
 //读取指定页的文件的内容
 vector<CString> CBinaryFile::Read(CString &fileName,int pageNo,int pageRcdNo){
-	vector<CString> res;
+	vector<CString> res; 
 	CString temp;
 	TCHAR con[256];
 	ZeroMemory(con,sizeof(con));
@@ -104,7 +104,6 @@ bool CBinaryFile::Write(CString &fileName,vector<CString> &str){
 	CFile writefile;
 	bool openWrite=writefile.Open(fileName,CFile::modeCreate|CFile::modeWrite|CFile::typeBinary/*|CFile::modeNoTruncate*/);
 	if(openWrite){
-		//writefile.SeekToEnd();
 		for(int i=0;i < str.size();i++){
 			int num=str[i].GetLength()*2;
 			char len[4];

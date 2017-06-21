@@ -10,6 +10,7 @@ class CLoginDlg : public CDialogEx
 public:
 	CLoginDlg(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CLoginDlg();
+	int userTrue;
 
 // 对话框数据
 	enum { IDD = IDD_LOGIN };
@@ -24,4 +25,6 @@ public:
 	CString m_sUsername;
 	CString m_sPwd;
 	afx_msg void OnBnClickedRegister();
+	afx_msg void OnPaint();
+	afx_msg void OnEnChangeEdit2();
 };

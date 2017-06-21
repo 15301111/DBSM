@@ -5,8 +5,8 @@
 #include <cctype>
 #include "Global.h"
 #include "SystemLogic.h"
-
-
+#include"indexDAO.h"
+#include "indexLogic.h"
 
 CRecordLogic::CRecordLogic(CString dbname,CString tableName)
 {
@@ -200,6 +200,7 @@ int CRecordLogic::IsUnique(CString &value,CString &fieldName)
 }
 
 //增加记录
+extern vector<CRecordEntity> RecordsForIndex;
 int CRecordLogic::AddRecord(CRecordEntity &record, vector<CFieldEntity> &fieldList)
 {
 	//vector<CFieldEntity> flist=CFieldDAO::ReadFieldList(tdfPath);
@@ -217,6 +218,9 @@ int CRecordLogic::AddRecord(CRecordEntity &record, vector<CFieldEntity> &fieldLi
 	
 	if(!CRecordDAO::SaveRcdCounter(this->trdPath,count))
 		return SAVE_COUNTER_ERROR;
+	
+	CIndexLogic cindexlogic(this->dbName,this->tbName);
+	cindexlogic.sort(record);
 
 	CSystemLogic sysLogic;
 	sysLogic.WriteLog(CString("add an record.")+CString("database: ")+dbName+CString(" table: ")+tbName);
@@ -230,6 +234,8 @@ int CRecordLogic::DeleteRecord(int id)
 {
 	if (CRecordDAO::DeleteRecord(id, trdPath))
 	{
+		CString priPath = DEFAULT_ROOT + CString("/") + this->dbName + CString("/") + this->tbName + CString("/") + CString("primary.ind");
+		CRecordDAO::DeleteRecord(id, trdPath);
 		CSystemLogic sysLogic;
 		sysLogic.WriteLog(CString("deleted an record.")+CString("database: ")+dbName+CString(" table: ")+tbName);
 		return YES;
@@ -255,8 +261,9 @@ int CRecordLogic::DeleteAllRecord()
 //修改记录
 int CRecordLogic::ModifyRecord(CRecordEntity &record)
 {
-	if(CRecordDAO::ModifyRecord(record,trdPath,tdfPath))
-	{
+	if(CRecordDAO::ModifyRecord(record,trdPath,tdfPath)){
+		CString priPath = DEFAULT_ROOT + CString("/") + this->dbName + CString("/") + this->tbName + CString("/") + CString("primary.ind");
+		CRecordDAO::ModifyRecord(record, priPath, tdfPath);
 		CSystemLogic sysLogic;
 		sysLogic.WriteLog(CString("modified record,record id:")+CUtil::IntegerToString(record.GetId())
 						+CString("database: ")+dbName+CString(" table: ")+tbName);
@@ -274,28 +281,64 @@ vector<CRecordEntity> CRecordLogic::GetRecordList()
 
 
 vector<CRecordEntity> CRecordLogic::ConditionQuery(vector<CFieldEntity> fieldList,
-												   vector<CString> compare,
-												   vector<CString> values)
+	vector<CString> compare,
+	vector<CString> values)
 {
-	vector<CRecordEntity> rcdList = CRecordDAO::ReadRecordList(trdPath,fieldList);
+	CString pkName = CString("");
+	int number = 0;
+	for (vector<CFieldEntity>::iterator ite = fieldList.begin();ite != fieldList.end(); ite++) {
+		number++;
+		if (ite->GetIsPK()) {
+			pkName = ite->GetName();
+			break;
+		}
+	}
 	vector<CRecordEntity> res;
-	for (vector<CRecordEntity>::iterator ite=rcdList.begin();ite!=rcdList.end();++ite)
-	{
-		bool condition = true;
-		for (int i = 0; i < compare.size(); i++)
+	if (pkName == CString("") || values[number] == L"") {
+		vector<CRecordEntity> rcdList = CRecordDAO::ReadRecordList(trdPath, fieldList);
+		for (vector<CRecordEntity>::iterator ite = rcdList.begin();ite != rcdList.end();++ite)
 		{
-			if(values[i]!=L"")
+			bool condition = true;
+			for (int i = 0; i < compare.size(); i++)
 			{
-				if (compare[i]==L"="&&ite->GetValue(fieldList[i].GetName())!=values[i])
-					{ condition = false; break; }
-				else if(compare[i]==L">"&&ite->GetValue(fieldList[i].GetName())<=values[i])
-					{ condition = false; break; }
-				else if(compare[i]==L"<"&&ite->GetValue(fieldList[i].GetName())>=values[i])
-					{ condition = false; break; }
+				if (values[i] != L"")
+				{
+					if (compare[i] == L"="&&ite->GetValue(fieldList[i].GetName()) != values[i])
+					{
+						condition = false; break;
+					}
+					else if (compare[i] == L">"&&ite->GetValue(fieldList[i].GetName()) <= values[i])
+					{
+						condition = false; break;
+					}
+					else if (compare[i] == L"<"&&ite->GetValue(fieldList[i].GetName()) >= values[i])
+					{
+						condition = false; break;
+					}
+				}
+			}
+			if (condition)
+				res.push_back(*ite);
+		}
+	}
+	else {
+		CString priPath = DEFAULT_ROOT + CString("/") + this->dbName + CString("/") + this->tbName + CString("/") + CString("primary.ind");
+		vector<CRecordEntity> rcdList = CRecordDAO::ReadRecordList(priPath, fieldList);
+
+		bool condition = true;
+		if (compare[number] == L"=") {
+			int low = 0;
+			int high = rcdList.size() - 1;
+			while (low < high) {
+				int mid = (low + high) / 2;
+				if (CUtil::StringToInteger(values[number]) == CUtil::StringToInteger(rcdList[mid].GetValue(pkName)))
+					res.push_back(rcdList[mid]);
+				else if (CUtil::StringToInteger(values[number]) < CUtil::StringToInteger(rcdList[mid].GetValue(pkName)))
+					high = mid - 1;
+				else low = mid + 1;
 			}
 		}
-		if (condition)
-			res.push_back(*ite);
+		
 	}
 	return res;
 }

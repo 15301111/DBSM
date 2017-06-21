@@ -14,5 +14,6 @@ public:
 	void LookLog(CString &fileName);
 	CString GetCurrUserName(CString &fileName);
 	bool SaveCurrUserName(CString &fileName,CString &username);
+	bool SaveCurrPassword(CString &fileName,CString &password);
 };
 

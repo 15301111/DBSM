@@ -94,7 +94,14 @@ CString CSystemDAO::GetCurrUserName(CString &fileName)
 
 bool CSystemDAO::SaveCurrUserName(CString &fileName,CString &username)
 {
-	vector<CString> str;
-	str.push_back(username);
-	return CBinaryFile::Write(fileName,str);
+	vector<CString> strname;
+	strname.push_back(username);
+	return CBinaryFile::Write(fileName,strname);
+}
+
+bool CSystemDAO::SaveCurrPassword(CString &fileName,CString &password)
+{
+	vector<CString> strpassword;
+	strpassword.push_back(password);
+	return CBinaryFile::Write(fileName,strpassword);
 }

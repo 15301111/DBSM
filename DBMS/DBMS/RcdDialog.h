@@ -42,4 +42,5 @@ public:
 	afx_msg void OnNMClickList(NMHDR *pNMHDR, LRESULT *pResult);
 	CEdit m_edit;
 	afx_msg void OnEnKillfocusEdit();
+	afx_msg void OnPaint();
 };

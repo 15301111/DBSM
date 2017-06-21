@@ -39,6 +39,7 @@ BEGIN_MESSAGE_MAP(CRcdDialog, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CRcdDialog::OnBnClickedOk)
 	ON_NOTIFY(NM_CLICK, IDC_LIST2, &CRcdDialog::OnNMClickList)
 	ON_EN_KILLFOCUS(IDC_EDIT1, &CRcdDialog::OnEnKillfocusEdit)
+	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 
@@ -105,6 +106,7 @@ void CRcdDialog::OnBnClickedOk()
 	//m_record->SetValue();
 	m_record = new CRecordEntity();
 	CRecordLogic rcdLogic(m_sDBName,m_sTableName);
+
 	bool isOK = true;
 	//验证合法性
 	for (int i=0; i<m_vFieldList.size(); ++i)
@@ -138,6 +140,7 @@ void CRcdDialog::OnBnClickedOk()
 		{
 			//插入数据
 			code = rcdLogic.AddRecord(*m_record, m_vFieldList);
+			
 		}
 		else
 		{
@@ -171,7 +174,7 @@ void CRcdDialog::OnBnClickedOk()
 		
 	}
 
-	//CDialogEx::OnOK();
+	CDialogEx::OnOK();
 }
 
 
@@ -219,4 +222,21 @@ void CRcdDialog::OnEnKillfocusEdit()
 
 	// 把用户输入的内容同步到列表上
 	m_listCtl.SetItemText(m_nRow, m_nColumn, strValue);
+}
+
+void CRcdDialog::OnPaint()
+{
+	CPaintDC dc(this);   
+	CRect rect;   
+	GetClientRect(&rect);   
+	CDC dcMem;   
+	dcMem.CreateCompatibleDC(&dc);   
+	CBitmap bmpBackground;   
+	bmpBackground.LoadBitmap(IDB_BITMAP1);   
+	//IDB_BITMAP是你自己的图对应的ID
+	BITMAP bitmap;
+	bmpBackground.GetBitmap(&bitmap);   
+	CBitmap *pbmpOld=dcMem.SelectObject(&bmpBackground);   
+	dc.StretchBlt(0,0,rect.Width(),rect.Height(),&dcMem,0,0,bitmap.bmWidth,bitmap.bmHeight,SRCCOPY);   
+	CDialogEx::OnPaint();
 }

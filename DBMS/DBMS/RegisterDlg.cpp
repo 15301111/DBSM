@@ -36,6 +36,7 @@ void CRegisterDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CRegisterDlg, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CRegisterDlg::OnBnClickedOk)
+	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 
@@ -66,4 +67,21 @@ void CRegisterDlg::OnBnClickedOk()
 		else
 			MessageBox(L"两次密码必须一样！",L"提示",MB_OK);
 	}
+}
+
+void CRegisterDlg::OnPaint()
+{
+	CPaintDC dc(this);   
+	CRect rect;   
+	GetClientRect(&rect);   
+	CDC dcMem;   
+	dcMem.CreateCompatibleDC(&dc);   
+	CBitmap bmpBackground;   
+	bmpBackground.LoadBitmap(IDB_BITMAP2);   
+	//IDB_BITMAP是你自己的图对应的ID
+	BITMAP bitmap;
+	bmpBackground.GetBitmap(&bitmap);   
+	CBitmap *pbmpOld=dcMem.SelectObject(&bmpBackground);   
+	dc.StretchBlt(0,0,rect.Width(),rect.Height(),&dcMem,0,0,bitmap.bmWidth,bitmap.bmHeight,SRCCOPY);   
+	CDialogEx::OnPaint();
 }

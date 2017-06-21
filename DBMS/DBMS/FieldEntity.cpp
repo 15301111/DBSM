@@ -13,8 +13,8 @@ CFieldEntity::CFieldEntity(int id,CString name,int type,int length,int isPK,int 
 	m_sComment(comment)
 {
 	this->m_iOrder = 0;
-	this->m_dMax = INT_MIN;
-	this->m_dMin = INT_MAX;
+	this->m_dMax = INT_MAX;
+	this->m_dMin = INT_MIN;
 	this->m_sDefault = CString("");
 
 }

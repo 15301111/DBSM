@@ -169,21 +169,19 @@ bool CDBDAO::BackupDB(CString &dbName,CString &destPath)
 	return CBinaryFile::Write(destPath+L"/db.back",str);
 }
 
-bool CDBDAO::ImportDB(CString &sourcePath,CString &destDBName)
+bool CDBDAO::ImportDB(CString &sourcePath, CString &destDBName)
 {
 	CString destPath = DEFAULT_ROOT + CString("/") + destDBName;
-	CUtil::CopyDirectory(sourcePath,destPath);
-	CString fileName = destPath+CString("/")+CBinaryFile::ReadFirstLine(destPath+L"/db.back");
+	CUtil::CopyDirectory(sourcePath, destPath);
+	CString fileName = destPath + CString("/") + CBinaryFile::ReadFirstLine(destPath + L"/db.back");
 	vector<CString> list = CBinaryFile::ReadAll(fileName);
-	bool writeSucc = CBinaryFile::Write(destPath+CString("/")+destDBName+CString(".db"),list);
-	if(writeSucc)
+	bool writeSucc = CBinaryFile::Write(destPath + CString("/") + destDBName + CString(".db"), list);
+	if (writeSucc)
 	{
-		CUtil::DeleteFileA(destPath+L"/db.back");
+		CUtil::DeleteFileA(destPath + L"/db.back");
 		CUtil::DeleteFileA(fileName);
 		return true;
 	}
 	else
 		return false;
-	
-	
 }

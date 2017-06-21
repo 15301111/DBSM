@@ -32,6 +32,8 @@ BEGIN_MESSAGE_MAP(CTableView, CListView)
 	ON_COMMAND(ID_32785, &CTableView::OnDeleteRecord)
 	ON_COMMAND(ID_32784, &CTableView::OnModifyRecord)
 	ON_COMMAND(ID_32781, &CTableView::OnModifyField)
+	//ON_NOTIFY(NM_CUSTOMDRAW,,OnCustomdrawList)
+	//ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 
@@ -284,7 +286,6 @@ void CTableView::OnAddRecord()
 
 	addRcdDlg.DoModal();
 	//addRcdDlg.ShowWindow(TRUE);
-
 }
 
 
@@ -368,3 +369,19 @@ void CTableView::OnModifyField()
 	}
 
 }
+
+/*void CTableView::OnPaint()
+{
+	CPaintDC dc(this);   
+	CRect rect;   
+	GetClientRect(&rect);   
+	CDC dcMem;   
+	dcMem.CreateCompatibleDC(&dc);   
+	CBitmap bmpBackground;   
+	bmpBackground.LoadBitmap(IDB_BITMAP6);
+	BITMAP bitmap;
+	bmpBackground.GetBitmap(&bitmap);   
+	CBitmap *pbmpOld=dcMem.SelectObject(&bmpBackground);   
+	dc.StretchBlt(0,0,rect.Width(),rect.Height(),&dcMem,0,0,bitmap.bmWidth,bitmap.bmHeight,SRCCOPY);   
+	CListView::OnPaint();
+}*/

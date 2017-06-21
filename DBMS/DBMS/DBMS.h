@@ -19,15 +19,14 @@ class CDBMSApp : public CWinApp
 public:
 	CDBMSApp();
 
-
 // ÷ÿ–¥
 public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
 
 //  µœ÷
-	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
+	afx_msg void On32797();
 };
 
 extern CDBMSApp theApp;

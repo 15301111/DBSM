@@ -5,7 +5,7 @@
 #include "FieldDAO.h"
 #include "DBDAO.h"
 #include "SystemLogic.h"
-
+#include "indexDAO.h"
 
 CTableLogic::CTableLogic(CString dbName)
 {
@@ -37,7 +37,8 @@ int CTableLogic::CreateTable(CString &tableName)
 		CTableEntity table(++counter,tableName,m_sDBName);
 		if(CTableDAO::WriteAnTable(table,dbPath)&&
 			CTableDAO::InitTBFile(m_sDBName,tableName)&&
-			CTableDAO::SaveTableCounter(dbPath,counter))
+			CTableDAO::SaveTableCounter(dbPath, counter)&&
+			CIndexDAO::InitIndFile(this->m_sDBName, tableName))
 		{
 			CSystemLogic sysLogic;
 			sysLogic.WriteLog(CString("created an table:")+tableName+CString(" database: ")+m_sDBName);

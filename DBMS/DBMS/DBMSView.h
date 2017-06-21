@@ -33,6 +33,7 @@ public:
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
+	afx_msg void OnPaint();
 #endif
 
 protected:

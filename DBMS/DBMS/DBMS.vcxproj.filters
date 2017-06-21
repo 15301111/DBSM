@@ -159,6 +159,12 @@
     <ClInclude Include="RegisterDlg.h">
       <Filter>Global\Head File</Filter>
     </ClInclude>
+    <ClInclude Include="indexDAO.h">
+      <Filter>DAO\Head File</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexLogic.h">
+      <Filter>Logic\Head File</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DBMS.cpp">
@@ -245,6 +251,12 @@
     <ClCompile Include="RegisterDlg.cpp">
       <Filter>Global\Source File</Filter>
     </ClCompile>
+    <ClCompile Include="indexDAO.cpp">
+      <Filter>DAO\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexLogic.cpp">
+      <Filter>Logic\Source File</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DBMS.rc">
@@ -263,16 +275,40 @@
     <Image Include="res\DBMS.ico">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="res\Toolbar.bmp">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\db.ico">
-      <Filter>资源文件</Filter>
-    </Image>
     <Image Include="res\icon2.ico">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="res\tb.ico">
+    <Image Include="res\login.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\register.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\field.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\tbp.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\dbp.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\1.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\2.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\3.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\4.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\we.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\Toolbar.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

@@ -14,6 +14,7 @@ CDBLogic::CDBLogic(void)
 
 CDBLogic::~CDBLogic(void)
 {
+
 }
 
 

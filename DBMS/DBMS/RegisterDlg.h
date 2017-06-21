@@ -23,4 +23,5 @@ public:
 	CString m_sPwd;
 	CString m_sVPwd;
 	afx_msg void OnBnClickedOk();
+	afx_msg void OnPaint();
 };

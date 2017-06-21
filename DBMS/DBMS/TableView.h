@@ -47,6 +47,7 @@ public:
 	afx_msg void OnDeleteRecord();
 	afx_msg void OnModifyRecord();
 	afx_msg void OnModifyField();
+	//afx_msg void OnPaint();
 };
 
 

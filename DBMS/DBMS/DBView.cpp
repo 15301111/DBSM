@@ -47,6 +47,7 @@ BEGIN_MESSAGE_MAP(CDBView, CTreeView)
 	ON_COMMAND(ID_32795, &CDBView::OnRecoveryDB)
 	ON_COMMAND(ID_32788, &CDBView::OnClearTable)
 	ON_COMMAND(ID_32791, &CDBView::OnLookLog)
+	//ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 
@@ -645,3 +646,20 @@ void CDBView::OnLookLog()
 	CSystemLogic sysLogic;
 	sysLogic.LookLog();
 }
+
+/*void CDBView::OnPaint()
+{
+	CPaintDC dc(this);   
+	CRect rect;   
+	GetClientRect(&rect);   
+	CDC dcMem;   
+	dcMem.CreateCompatibleDC(&dc);   
+	CBitmap bmpBackground;   
+	bmpBackground.LoadBitmap(IDB_BITMAP6);   
+	//IDB_BITMAP是你自己的图对应的ID
+	BITMAP bitmap;
+	bmpBackground.GetBitmap(&bitmap);   
+	CBitmap *pbmpOld=dcMem.SelectObject(&bmpBackground);   
+	dc.StretchBlt(0,0,rect.Width(),rect.Height(),&dcMem,0,0,bitmap.bmWidth,bitmap.bmHeight,SRCCOPY);   
+	CTreeView::OnPaint();
+}*/

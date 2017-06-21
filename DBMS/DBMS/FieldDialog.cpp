@@ -63,6 +63,7 @@ BEGIN_MESSAGE_MAP(CFieldDialog, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CFieldDialog::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_CHECK1, &CFieldDialog::OnBnClickedPK)
 	ON_CBN_SELCHANGE(IDC_COMBO1, &CFieldDialog::OnCbnSelchangeType)
+	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 
@@ -166,6 +167,7 @@ void CFieldDialog::OnBnClickedOk()
 		{
 			this->ModifyField(flag);
 		}
+		CFieldDialog::EndDialog(true);
 	}
 }
 
@@ -413,4 +415,21 @@ void CFieldDialog::ModifyField(bool flag)
 		
 	}
 
+}
+
+void CFieldDialog::OnPaint()
+{
+	CPaintDC dc(this);   
+	CRect rect;   
+	GetClientRect(&rect);   
+	CDC dcMem;   
+	dcMem.CreateCompatibleDC(&dc);   
+	CBitmap bmpBackground;   
+	bmpBackground.LoadBitmap(IDB_BITMAP1);   
+	//IDB_BITMAP是你自己的图对应的ID
+	BITMAP bitmap;
+	bmpBackground.GetBitmap(&bitmap);   
+	CBitmap *pbmpOld=dcMem.SelectObject(&bmpBackground);   
+	dc.StretchBlt(0,0,rect.Width(),rect.Height(),&dcMem,0,0,bitmap.bmWidth,bitmap.bmHeight,SRCCOPY);   
+	CDialogEx::OnPaint();
 }

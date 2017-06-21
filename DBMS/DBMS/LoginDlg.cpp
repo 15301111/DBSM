@@ -11,13 +11,14 @@
 
 
 // CLoginDlg 对话框
+CSystemDAO sysDao;
 
 IMPLEMENT_DYNAMIC(CLoginDlg, CDialogEx)
 
 CLoginDlg::CLoginDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CLoginDlg::IDD, pParent)
-	, m_sUsername(_T("root"))
-	, m_sPwd(_T(""))
+	, m_sUsername(sysDao.GetCurrUserName(CString("log/u.temp")))
+	, m_sPwd(sysDao.GetCurrUserName(CString("log/u1.temp")))
 {
 
 }
@@ -38,6 +39,7 @@ BEGIN_MESSAGE_MAP(CLoginDlg, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CLoginDlg::OnBnClickedOk)
 	ON_WM_CLOSE()
 	ON_BN_CLICKED(IDC_BUTTON1, &CLoginDlg::OnBnClickedRegister)
+	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 
@@ -52,16 +54,14 @@ void CLoginDlg::OnBnClickedOk()
 	if(sysLogic.VerifyLogin(m_sUsername,m_sPwd))
 	{
 		//记录当前登录的用户名
-		CSystemDAO sysDao;
 		sysDao.SaveCurrUserName(CString("log/u.temp"),m_sUsername);
+		sysDao.SaveCurrPassword(CString("log/u1.temp"),m_sPwd);
 		CDialogEx::OnOK();
+		userTrue = 1;
 	}
 	else
-		MessageBox(L"用户名或者密码错误！",L"提示",MB_OK);
-
-	
+		MessageBox(L"用户名或者密码错误！",L"提示",MB_OK);	
 }
-
 
 void CLoginDlg::OnClose()
 {
@@ -78,4 +78,21 @@ void CLoginDlg::OnBnClickedRegister()
 	// TODO: 在此添加控件通知处理程序代码
 	CRegisterDlg reg;
 	reg.DoModal();
+}
+
+void CLoginDlg::OnPaint()
+{
+	CPaintDC dc(this);   
+	CRect rect;   
+	GetClientRect(&rect);   
+	CDC dcMem;   
+	dcMem.CreateCompatibleDC(&dc);   
+	CBitmap bmpBackground;   
+	bmpBackground.LoadBitmap(IDB_BITMAP1);   
+	//IDB_BITMAP是你自己的图对应的ID
+	BITMAP bitmap;
+	bmpBackground.GetBitmap(&bitmap);   
+	CBitmap *pbmpOld=dcMem.SelectObject(&bmpBackground);   
+	dc.StretchBlt(0,0,rect.Width(),rect.Height(),&dcMem,0,0,bitmap.bmWidth,bitmap.bmHeight,SRCCOPY);   
+	CDialogEx::OnPaint();
 }

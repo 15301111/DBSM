@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -14,19 +14,21 @@
     <ProjectGuid>{72DD636E-2628-4E48-907F-4ABC94559C79}</ProjectGuid>
     <RootNamespace>DBMS</RootNamespace>
     <Keyword>MFCProj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
+    <UseOfAtl>Dynamic</UseOfAtl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
@@ -103,6 +105,8 @@
   <ItemGroup>
     <ClInclude Include="ConditionQuery.h" />
     <ClInclude Include="FieldDialog.h" />
+    <ClInclude Include="indexDAO.h" />
+    <ClInclude Include="IndexLogic.h" />
     <ClInclude Include="LoginDlg.h" />
     <ClInclude Include="RcdDialog.h" />
     <ClInclude Include="BinaryFile.h" />
@@ -136,6 +140,8 @@
   <ItemGroup>
     <ClCompile Include="ConditionQuery.cpp" />
     <ClCompile Include="FieldDialog.cpp" />
+    <ClCompile Include="indexDAO.cpp" />
+    <ClCompile Include="IndexLogic.cpp" />
     <ClCompile Include="LoginDlg.cpp" />
     <ClCompile Include="RcdDialog.cpp" />
     <ClCompile Include="BinaryFile.cpp" />
@@ -173,12 +179,20 @@
     <None Include="res\DBMS.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\db.ico" />
+    <Image Include="res\1.bmp" />
+    <Image Include="res\2.bmp" />
+    <Image Include="res\3.bmp" />
+    <Image Include="res\4.bmp" />
     <Image Include="res\DBMS.ico" />
     <Image Include="res\DBMSDoc.ico" />
+    <Image Include="res\dbp.ico" />
+    <Image Include="res\field.bmp" />
     <Image Include="res\icon2.ico" />
-    <Image Include="res\tb.ico" />
+    <Image Include="res\login.bmp" />
+    <Image Include="res\register.bmp" />
+    <Image Include="res\tbp.ico" />
     <Image Include="res\Toolbar.bmp" />
+    <Image Include="res\we.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

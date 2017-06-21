@@ -58,6 +58,7 @@ public:
 	afx_msg void OnRenameDB();
 	afx_msg void OnInitDB();
 	afx_msg void OnLookLog();
+	afx_msg void OnPaint();
 };
 
 

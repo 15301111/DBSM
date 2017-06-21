@@ -34,6 +34,7 @@ public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedPK();
 	afx_msg void OnCbnSelchangeType();
+	afx_msg void OnPaint();
 	void AddField(bool flag);
 	void ModifyField(bool flag);
 	CComboBox m_combType;

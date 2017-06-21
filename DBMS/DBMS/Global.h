@@ -55,9 +55,14 @@
 #include <map>
 #include <cstdio>
 #include <cstring>
+#include"RecordEntity.h"
 using namespace std;
 #include "Util.h"	//工具类
 #include "BinaryFile.h"	//文件操作类
+
+
+
+//extern vector<CRecordEntity> RecordsForIndex;
 
 
 class Varchar

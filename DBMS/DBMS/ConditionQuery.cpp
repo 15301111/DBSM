@@ -41,6 +41,7 @@ BEGIN_MESSAGE_MAP(CConditionQuery, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_COMBO2, &CConditionQuery::OnCbnSelchangeCombox)
 	ON_EN_KILLFOCUS(IDC_EDIT2, &CConditionQuery::OnEnKillfocusEdit)
 	ON_BN_CLICKED(IDOK, &CConditionQuery::OnBnClickedOk)
+	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 
@@ -186,4 +187,21 @@ void CConditionQuery::OnBnClickedOk()
 	m_pParent->m_pTableView->DisplayRecords(rcdList,fieldLogic.GetFieldList());
 
 	CDialogEx::OnOK();
+}
+
+void CConditionQuery::OnPaint()
+{
+	CPaintDC dc(this);   
+	CRect rect;   
+	GetClientRect(&rect);   
+	CDC dcMem;   
+	dcMem.CreateCompatibleDC(&dc);   
+	CBitmap bmpBackground;   
+	bmpBackground.LoadBitmap(IDB_BITMAP1);   
+	//IDB_BITMAP是你自己的图对应的ID
+	BITMAP bitmap;
+	bmpBackground.GetBitmap(&bitmap);   
+	CBitmap *pbmpOld=dcMem.SelectObject(&bmpBackground);   
+	dc.StretchBlt(0,0,rect.Width(),rect.Height(),&dcMem,0,0,bitmap.bmWidth,bitmap.bmHeight,SRCCOPY);   
+	CDialogEx::OnPaint();
 }

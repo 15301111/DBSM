@@ -37,4 +37,3 @@ public:
 	void SetModifyTime(CString modifyTime) { m_sModifyTime=modifyTime; };
 
 };
-

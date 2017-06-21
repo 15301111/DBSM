@@ -26,6 +26,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_COMMAND(ID_32773, &CMainFrame::OnRenameDB)
 	ON_COMMAND(ID_32790, &CMainFrame::OnInitDB)
 	ON_COMMAND(ID_32791, &CMainFrame::OnLookLog)
+	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -84,8 +85,8 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 	return TRUE;
 }
 
-// CMainFrame 诊断
 
+// CMainFrame 诊断
 #ifdef _DEBUG
 void CMainFrame::AssertValid() const
 {
@@ -182,4 +183,21 @@ void CMainFrame::OnLookLog()
 	// TODO: 在此添加命令处理程序代码
 
 	m_pDBView->OnLookLog();
+}
+
+void CMainFrame::OnPaint()
+{
+	CPaintDC dc(this);   
+	CRect rect;   
+	GetClientRect(&rect);   
+	CDC dcMem;   
+	dcMem.CreateCompatibleDC(&dc);   
+	CBitmap bmpBackground;   
+	bmpBackground.LoadBitmap(IDB_BITMAP6);   
+	//IDB_BITMAP是你自己的图对应的ID
+	BITMAP bitmap;
+	bmpBackground.GetBitmap(&bitmap);   
+	CBitmap *pbmpOld=dcMem.SelectObject(&bmpBackground);   
+	dc.StretchBlt(0,0,rect.Width(),rect.Height(),&dcMem,0,0,bitmap.bmWidth,bitmap.bmHeight,SRCCOPY);   
+	CFrameWnd::OnPaint();
 }

@@ -71,15 +71,21 @@ END
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\DBMS.ico"
 IDR_DBMSTYPE            ICON                    "res\\DBMSDoc.ico"
-IDI_ICON1               ICON                    "res\\db.ico"
-IDI_ICON2               ICON                    "res\\tb.ico"
+IDI_ICON2               ICON                    "res\\tbp.ico"
+IDI_ICON1               ICON                    "res\\dbp.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
+IDR_MAINFRAME           BITMAP                  "G:\\作业进度\\C++\\database\\最终DBMS\\DBMS\\DBMS\\res\\Toolbar.bmp"
+IDB_BITMAP1             BITMAP                  "res\\login.bmp"
+IDB_BITMAP2             BITMAP                  "res\\register.bmp"
+IDB_BITMAP3             BITMAP                  "res\\field.bmp"
+IDB_BITMAP4             BITMAP                  "res\\1.bmp"
+IDB_BITMAP5             BITMAP                  "res\\2.bmp"
+IDB_BITMAP6             BITMAP                  "res\\3.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -148,7 +154,7 @@ BEGIN
     END
     POPUP "帮助(&H)"
     BEGIN
-        MENUITEM "关于 DBMS(&A)...",              ID_APP_ABOUT
+        MENUITEM "关于(&A)",                      ID_32797
     END
 END
 
@@ -187,38 +193,34 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSM
 CAPTION "关于 DBMS"
 FONT 9, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    ICON            IDR_MAINFRAME,IDC_STATIC,14,14,20,20
-    LTEXT           "DBMS，1.0 版",IDC_STATIC,42,14,114,8,SS_NOPREFIX
-    LTEXT           "第二组荣誉出品",IDC_STATIC,42,26,139,8
+    LTEXT           "DBMS 第二小组",IDC_STATIC,76,22,48,8
     DEFPUSHBUTTON   "确定",IDOK,75,42,50,14,WS_GROUP
 END
 
-IDD_ADDFIELD DIALOGEX 0, 0, 263, 195
+IDD_ADDFIELD DIALOGEX 0, 0, 263, 164
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION " 增加字段"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "确定",IDOK,54,174,50,14
-    PUSHBUTTON      "取消",IDCANCEL,132,174,50,14
-    LTEXT           "字段名称：",IDC_STATIC,22,22,41,8
-    EDITTEXT        IDC_EDIT1,66,19,118,14,ES_AUTOHSCROLL
-    LTEXT           "字段类型：",IDC_STATIC,22,44,41,8
-    COMBOBOX        IDC_COMBO1,66,42,71,38,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "长度：",IDC_STATIC,151,44,29,8
-    EDITTEXT        IDC_EDIT3,179,41,69,14,ES_AUTOHSCROLL
-    LTEXT           "默认值：",IDC_STATIC,30,66,33,8
-    EDITTEXT        IDC_EDIT4,66,64,70,14,ES_AUTOHSCROLL
-    GROUPBOX        "基本属性",IDC_STATIC,7,7,249,83
-    GROUPBOX        "约束条件",IDC_STATIC,7,102,249,62
-    LTEXT           "最大值：",IDC_STATIC,144,123,33,8
-    EDITTEXT        IDC_EDIT5,181,120,44,14,ES_AUTOHSCROLL
-    LTEXT           "最小值：",IDC_STATIC,30,123,33,8
-    EDITTEXT        IDC_EDIT6,67,120,44,14,ES_AUTOHSCROLL
-    CONTROL         "  主键",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,33,146,36,10
-    CONTROL         " 允许空值",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,93,146,50,10
-    CONTROL         " 唯一",IDC_CHECK3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,180,146,34,10
-    LTEXT           "注释：",IDC_STATIC,151,67,25,8
-    EDITTEXT        IDC_EDIT7,179,64,68,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "确定",IDOK,74,137,50,14
+    PUSHBUTTON      "取消",IDCANCEL,146,137,50,14
+    LTEXT           "字段名：",IDC_STATIC,14,23,33,8
+    EDITTEXT        IDC_EDIT1,65,20,71,14,ES_AUTOHSCROLL
+    LTEXT           "字段类型：",IDC_STATIC,13,46,41,8
+    COMBOBOX        IDC_COMBO1,65,44,71,38,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "字段长度：",IDC_STATIC,13,68,41,8
+    EDITTEXT        IDC_EDIT3,65,65,71,14,ES_AUTOHSCROLL
+    LTEXT           "默认值：",IDC_STATIC,147,22,33,8
+    EDITTEXT        IDC_EDIT4,183,22,70,14,ES_AUTOHSCROLL
+    LTEXT           "最大值：",IDC_STATIC,13,93,33,8
+    EDITTEXT        IDC_EDIT5,65,90,72,14,ES_AUTOHSCROLL
+    LTEXT           "最小值：",IDC_STATIC,13,113,33,8
+    EDITTEXT        IDC_EDIT6,65,111,72,14,ES_AUTOHSCROLL
+    CONTROL         "  主键",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,67,36,10
+    CONTROL         " 允许空值",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,91,50,10
+    CONTROL         " 唯一",IDC_CHECK3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,112,34,10
+    LTEXT           "注释：",IDC_STATIC,148,46,25,8
+    EDITTEXT        IDC_EDIT7,183,45,68,14,ES_AUTOHSCROLL
 END
 
 IDD_ADDRECORD DIALOGEX 0, 0, 309, 176
@@ -244,17 +246,17 @@ BEGIN
     COMBOBOX        IDC_COMBO2,74,23,48,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
 END
 
-IDD_LOGIN DIALOGEX 0, 0, 189, 104
+IDD_LOGIN DIALOGEX 0, 0, 327, 181
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "登录"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "登录",IDOK,36,83,50,14
-    LTEXT           "用户名：",IDC_STATIC,24,23,33,8
-    EDITTEXT        IDC_EDIT1,64,20,84,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT2,64,46,83,14,ES_PASSWORD | ES_AUTOHSCROLL
-    LTEXT           "密码：",IDC_STATIC,32,49,25,8
-    PUSHBUTTON      "注册",IDC_BUTTON1,101,83,50,14
+    DEFPUSHBUTTON   "登录",IDOK,130,108,50,14
+    LTEXT           "用户名",IDC_STATIC,129,16,25,8
+    EDITTEXT        IDC_EDIT1,129,35,84,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT2,130,74,83,14,ES_PASSWORD | ES_AUTOHSCROLL
+    LTEXT           "密码",IDC_STATIC,129,57,17,8
+    PUSHBUTTON      "注册",IDC_BUTTON1,130,129,50,14
 END
 
 IDD_REGISTER DIALOGEX 0, 0, 207, 125
@@ -337,7 +339,7 @@ BEGIN
         VERTGUIDE, 110
         VERTGUIDE, 221
         TOPMARGIN, 7
-        BOTTOMMARGIN, 188
+        BOTTOMMARGIN, 157
         HORZGUIDE, 30
         HORZGUIDE, 50
         HORZGUIDE, 73
@@ -364,10 +366,10 @@ BEGIN
     IDD_LOGIN, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 182
+        RIGHTMARGIN, 320
         VERTGUIDE, 64
         TOPMARGIN, 7
-        BOTTOMMARGIN, 97
+        BOTTOMMARGIN, 174
     END
 
     IDD_REGISTER, DIALOG

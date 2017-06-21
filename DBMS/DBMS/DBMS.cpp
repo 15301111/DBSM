@@ -19,12 +19,12 @@
 // CDBMSApp
 
 BEGIN_MESSAGE_MAP(CDBMSApp, CWinApp)
-	ON_COMMAND(ID_APP_ABOUT, &CDBMSApp::OnAppAbout)
 	// 基于文件的标准文档命令
 	ON_COMMAND(ID_FILE_NEW, &CWinApp::OnFileNew)
 	ON_COMMAND(ID_FILE_OPEN, &CWinApp::OnFileOpen)
 	// 标准打印设置命令
 	ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinApp::OnFilePrintSetup)
+	ON_COMMAND(ID_32797, &CDBMSApp::On32797)
 END_MESSAGE_MAP()
 
 
@@ -98,15 +98,24 @@ BOOL CDBMSApp::InitInstance()
 
 	// 注册应用程序的文档模板。文档模板
 	// 将用作文档、框架窗口和视图之间的连接
-	CSingleDocTemplate* pDocTemplate;
-	pDocTemplate = new CSingleDocTemplate(
-		IDR_MAINFRAME,
-		RUNTIME_CLASS(CDBMSDoc),
-		RUNTIME_CLASS(CMainFrame),       // 主 SDI 框架窗口
-		RUNTIME_CLASS(CDBMSView));
-	if (!pDocTemplate)
-		return FALSE;
-	AddDocTemplate(pDocTemplate);
+	
+	//弹出登录框
+	CLoginDlg login;
+	login.userTrue = 0;
+	login.DoModal();
+	if(login.userTrue==1)
+	{
+		CSingleDocTemplate* pDocTemplate;
+		pDocTemplate = new CSingleDocTemplate(
+			IDR_MAINFRAME,
+			RUNTIME_CLASS(CDBMSDoc),
+			RUNTIME_CLASS(CMainFrame),       // 主 SDI 框架窗口
+			RUNTIME_CLASS(CDBMSView));
+		if (!pDocTemplate)
+			return FALSE;
+		AddDocTemplate(pDocTemplate);
+	}
+	
 
 
 	// 分析标准 shell 命令、DDE、打开文件操作的命令行
@@ -123,10 +132,6 @@ BOOL CDBMSApp::InitInstance()
 	// 唯一的一个窗口已初始化，因此显示它并对其进行更新
 	m_pMainWnd->ShowWindow(SW_SHOW);
 	m_pMainWnd->UpdateWindow();
-
-	//弹出登录框
-	CLoginDlg login;
-	login.DoModal();
 
 	return TRUE;
 }
@@ -170,16 +175,12 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
-// 用于运行对话框的应用程序命令
-void CDBMSApp::OnAppAbout()
+void CDBMSApp::On32797()
 {
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();
+	// TODO: 在此添加命令处理程序代码
 }
-
-// CDBMSApp 消息处理程序
-
-
-

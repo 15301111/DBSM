@@ -99,6 +99,3 @@ CDBMSDoc* CDBMSView::GetDocument() const // 非调试版本是内联的
 	return (CDBMSDoc*)m_pDocument;
 }
 #endif //_DEBUG
-
-
-// CDBMSView 消息处理程序
